@@ -1,0 +1,68 @@
+﻿@model IEnumerable<MyMovieApp.ViewModel.MovieViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row ">
+<div class="col-md-6">
+<h1>All Movies</h1>
+</div>
+<div class="col-md-6">
+            <a asp-action="Create" class="btn btn-secondary"><i class="bi bi-plus-circle"></i> Create New Movie</a>
+</div>
+
+</div>
+@if (Model != null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReleaseDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Genres)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>
+                    <td>
+                        @if (item.Genres != null && item.Genres.Any())
+                        {
+                            <text>@string.Join(", ", item.Genres.Select(l => l.Name))</text>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <div class="">
+
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a asp-action="details" asp-route-id="@item.Id" class="btn btn-info mx-2"><i class="bi bi-info-square"></i>  Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
+                        </div>                      
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,26 @@
+﻿@model MyMovieApp.ViewModel.PaginatedMovieViewModel
+
+<div class="d-flex flex-row" id="moviesContainer">
+    @foreach (var movie in Model.Movies)
+    {
+        <div class="m-2 ">
+            <div class="card" style="width: 18rem;">
+                <img src="@movie.ImageLink" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title text-start">@movie.Title</h5>
+                    <p class="card-text text-start">
+                        @if (movie.Languages != null && movie.Languages.Any())
+                        {
+                            <text>@string.Join(", ", movie.Languages.Select(l => l.Name))</text>
+                        }
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="card-link">Book Movie</a>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

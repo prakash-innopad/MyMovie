@@ -1,0 +1,195 @@
+﻿@model MyMovieApp.ViewModel.HomeMovieViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@if(Model != null){
+<div class="text-center">
+    <div class="row">
+            <div class="col-2 accordion-container">
+            <div class="card">
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                    Langauges
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+                                    <form>
+                                    <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="language" id="languageAll" value="0" checked>
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            All
+                                        </label>
+                                    </div>
+                                        @foreach (var language in Model.Languages)
+                                        {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" onselect="getData()" name="language" id="language_@language.LanguageId" value="@language.LanguageId">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                    @language.Name
+                                        </label>
+                                    </div>
+                                    }
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                   Format
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <form>
+                                    <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="format" id="formatAll" value="" checked>
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            All
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="format" id="format3D" value="3D">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            3D
+                                        </label>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                    Sort By
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <form>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sort" value="0" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Relevance
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="sort" value="1" id="flexRadioDefault2">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Release Date : New to Old
+                                        </label>
+                                    </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sort" value="2" id="flexRadioDefault2">
+                                            <label class="form-check-label" for="flexRadioDefault2">
+                                                Release Date : Old to New
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>                               
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                    Genres
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <form>
+                                        @foreach (var genre in Model.Genres)
+                                        {
+                                            <div class="form-check">
+                                                <input class="form-check-input genre-checkbox" type="checkbox" value="@genre.GenreId" id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    @genre.Name
+                                                </label>
+                                            </div>
+                                        }
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="card">
+                <div class="d-flex flex-row" id="moviesContainer" >
+                    @foreach (var movie in Model.Movies)
+                    {
+                        <div class="m-2 ">
+                        <div class="card" style="width: 18rem;">
+                            <img src="@movie.ImageLink" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title text-start">@movie.Title</h5>                                        
+                                <p class="card-text text-start">@if(movie.Languages != null && movie.Languages.Any())
+                                    {
+                                        <text>@string.Join(", ",movie.Languages.Select(l=>l.Name))</text>
+                                    }
+                                </p>
+                            </div>                         
+                            <div class="card-footer">
+                                <a asp-action="Details" asp-controller="Movies" asp-route-id="@movie.Id" class="card-link">Book Movie</a>                                
+                            </div>
+                        </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+        $(document).ready(function () {
+        $('input[type=radio][name=language],input[type=radio][name=format],input[type=radio][name=sort]').change(function () {
+                debugger;
+                getData();
+            });
+
+            $('.genre-checkbox').change(function () {
+                getData();
+            });
+        });
+
+    function getData() {
+        debugger;
+        var selectedLanguage = $('input[name=language]:checked').val();
+        var selectedSort = $('input[name=sort]:checked').val();
+        var selectedFormat = $('input[name=format]:checked').val();
+        var selectedGenres = $('.genre-checkbox:checked').map(function () {
+            return this.value;
+        }).get();
+
+        debugger;
+        $.ajax({
+            url: '@Url.Action("GetFilteredMovies", "Home")',
+            type: 'POST',
+            data: {
+                lang: selectedLanguage,
+                genre: selectedGenres,
+                sort: selectedSort,
+                format: selectedFormat
+            },
+            success: function (data) {
+                $('#moviesContainer').html(data);
+            },
+            error: function () {
+                alert('An error occurred while fetching the data.');
+            }
+        });
+    }
+</script>
+
+
+

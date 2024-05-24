@@ -1,0 +1,183 @@
+﻿@model MyMovieApp.ViewModel.MovieViewModel
+
+<style>
+    .censorDurationList{
+        display : flex;
+        text-decoration : none;
+    }
+    ol,ul{
+        list-style :none;
+        margin : 0;
+        padding : 0;
+    }
+    .movieDetail{
+        font-size: 16px;
+        color: #7e7e7e;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: -.08px;
+    }
+
+    .video-frame {
+        border-radius: 15px;
+    }
+
+    .textCont{
+           margin-right :15px;
+    }
+    
+
+    .heartLike, .heartDislike {
+        border: solid 1px #7e7e7e;
+        border-radius : 94px;
+        text-align :center;
+        padding :10px;
+        margin-right :15px;
+        width:150px;
+        
+    }
+      #dateContainer {
+        display: flex;
+        gap: 10px;
+        margin : 14px;
+    }
+    .innerMain{
+        max-width: 1260px;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+      .dateBox {
+        padding: 10px;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    .movieDetailWrap{
+        background-color:#f6f6f6;
+        padding-top:22px;
+    }
+    .widgetWrapper{
+        padding:26px 24px;
+        border-radius:24px;
+        background: #fff;
+        margin-bottom:25px;
+    }
+    .infoItem span{
+        color:#7e7e7e;
+        font-size : 12px;
+        font-weight:bold;
+    }
+</style>
+<div>
+<div class="row">
+        <div class="col-4 ">
+        <h2>@Model.Title</h2>
+            <div class="col-4 movieDetail">
+                <ul class="censorDurationList">
+                    <li>@Model.Certificate.Name</li>
+                    <li class="ps-3">@Model.Runtime</li>
+                </ul>
+                <div>
+                    @foreach (var Genre in Model.Genres)
+                    {
+                        <a>@Genre.Name, </a>
+                    }
+                </div>
+                <div>
+
+                    @foreach (var Language in Model.Languages)
+                    {
+                        <a>@Language.Name, </a>
+                    }
+                </div>
+        </div>
+        
+    </div>
+    <div class="col-8">
+            <iframe class="video-frame" width="660" height="215" src="@Model.TrailerLink" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+</div>
+<div>
+     <div class ="ratingCont d-flex">
+         <div class="textCont d-flex">
+             <div><i class="bi bi-heart" style="color: red;"></i></div>
+             <div class="ps-2">84% 
+              <div>Liked this movie</div>
+             </div>
+         </div class="heartCont">
+             <div class=" d-flex">
+                 <div class="heartLike"><i class="bi bi-heart"></i>Like</div>
+                 <div class="heartDislike"><i class="bi bi-heartbreak"></i>Dislike</div>
+             </div>
+     </div>
+         
+</div>
+ <div class="d-flex">
+   <div id="dateContainer">
+       @{
+           var today = DateTime.Today;
+          @for(int i = 0; i < 7; i++)
+           {
+             <div class="dateBox">@today.AddDays(i).ToString("ddd dd")</div>        
+           }
+       }
+   </div>
+   <div class="d-flex m-3">
+         <div class="dropdown ">
+           <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             Language
+            </a>
+           <ul class="dropdown-menu">
+               @foreach (var Language in Model.Languages)
+               {
+                 <li><a class="dropdown-item" href="#">@Language.Name</a></li>
+               }
+           </ul>
+         </div>
+   
+         <div class="dropdown ps-4">
+           <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             Price
+           </a>
+           <ul class="dropdown-menu">    
+              <li><a class="dropdown-item" href="#">Below Rs 100</a></li>
+              <li><a class="dropdown-item" href="#">Rs 100 - Rs 199</a></li>
+              <li><a class="dropdown-item" href="#">Rs 200 - Rs 299</a></li>
+              <li><a class="dropdown-item" href="#">Rs 300 - Rs 399</a></li>
+           </ul>
+         </div>
+   </div>
+ </div>
+
+ <div class="movieDetailWrap">
+     <div class="innerMain"> 
+         <div class="widgetWrapper">  
+             <h3>Synopsis</h3>
+             <p>@Model.Synopsis</p>
+         </div>
+         <div class="widgetWrapper">  
+             <h3>Movie Guide</h3>
+             <div class="infoItem">
+                 <span>CERTIFICATION</span>
+                 <p>@Model.Certificate.Name</p>
+             </div>
+             
+             <div class="infoItem">
+             <span>LANGUAGE AVAILABLE</span>
+             <p>@Model.Certificate.Name</p>
+             </div>
+             <div class="infoItem">
+             <span>GENRE</span>
+             <p>@foreach (var Genre in Model.Genres)
+                    {
+                        <a>@Genre.Name, </a>
+                    }</p>
+             </div>
+         </div>
+     </div>
+ </div>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
