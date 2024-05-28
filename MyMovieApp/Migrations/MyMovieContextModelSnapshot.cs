@@ -22,6 +22,42 @@ namespace MyMovieApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CastMovie", b =>
+                {
+                    b.Property<int>("CastsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MoviesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CastsId", "MoviesId");
+
+                    b.HasIndex("MoviesId");
+
+                    b.ToTable("CastMovie");
+                });
+
+            modelBuilder.Entity("MyMovieApp.Models.Cast", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cast");
+                });
+
             modelBuilder.Entity("MyMovieApp.Models.Certificate", b =>
                 {
                     b.Property<int>("CertificateId")
@@ -150,6 +186,21 @@ namespace MyMovieApp.Migrations
                     b.HasIndex("LanguageId");
 
                     b.ToTable("MovieLanguages");
+                });
+
+            modelBuilder.Entity("CastMovie", b =>
+                {
+                    b.HasOne("MyMovieApp.Models.Cast", null)
+                        .WithMany()
+                        .HasForeignKey("CastsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyMovieApp.Models.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyMovieApp.Models.Movie", b =>

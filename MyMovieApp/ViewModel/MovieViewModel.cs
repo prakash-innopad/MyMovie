@@ -22,7 +22,8 @@ namespace MyMovieApp.ViewModel
         public Certificate Certificate { get; set; }
         public ICollection<LanguageViewModel>? Languages { get; set; }
         public ICollection<GenreViewModel>? Genres { get; set; }
-    }
+        public ICollection<CastViewModel>? Casts { get; set; }
+        }
 
     public class LanguageViewModel
     {
@@ -35,6 +36,13 @@ namespace MyMovieApp.ViewModel
         public int GenreId { get; set; }
         public string Name { get; set; }
     }
+
+    public class CastViewModel
+        {
+        public int CastId { get; set; }
+        public string CastName { get; set; }
+        public string ImageUrl { get; set; }
+        }
 
     public class HomeMovieViewModel
     {

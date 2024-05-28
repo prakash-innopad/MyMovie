@@ -34,6 +34,7 @@ namespace MyMovieApp.Models
         public ICollection<MovieLanguage> MovieLanguages { get; set; }
 
         public ICollection<MovieGenre> MovieGenres { get; set; }
+        public ICollection<Cast> Casts { get; set; }
 
-    }
+        }
 }

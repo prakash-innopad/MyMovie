@@ -28,12 +28,15 @@
     
 
     .heartLike, .heartDislike {
+        display:flex;
         border: solid 1px #7e7e7e;
         border-radius : 94px;
-        text-align :center;
+        justify-content:center;
+        align-items:center;
         padding :10px;
         margin-right :15px;
         width:150px;
+        height:40px;
         
     }
       #dateContainer {
@@ -55,6 +58,7 @@
     .movieDetailWrap{
         background-color:#f6f6f6;
         padding-top:22px;
+        width:100%;
     }
     .widgetWrapper{
         padding:26px 24px;
@@ -67,9 +71,22 @@
         font-size : 12px;
         font-weight:bold;
     }
+    .imgCast, .movieCast{
+       display:flex;
+       justify-content: center;
+    }
+    .movieCast{
+       display:flex;
+       justify-content: start;
+    }
+    .movieCast > div{
+      margin :0px 12px;
+    }
+    
+    
 </style>
-<div>
-<div class="row">
+
+<div class="row pb-4">
         <div class="col-4 ">
         <h2>@Model.Title</h2>
             <div class="col-4 movieDetail">
@@ -97,8 +114,29 @@
             <iframe class="video-frame" width="660" height="215" src="@Model.TrailerLink" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 </div>
+
+@* <div style="background-color:powderblue; width:320px; display:flex">
+    <div style="margin:3px; display:flex; flex-direction:row;">
+    <div style="margin:3px; width:150px;height:40px; background-color:white;  display:flex; align-items: center;justify-content: center; ">
+        <a>Showlisting</a>
+    </div>
+    <div style="margin:3px; width:150px;height:40px; background-color:white; display:flex;  align-items: center;justify-content: center; ">
+        <a>Reviews & More</a>
+    </div>
+    </div>
+</div> *@
+      
 <div>
-     <div class ="ratingCont d-flex">
+<div class="row">
+    <div class="col-6">
+        <input type="radio" class="btn-check" name="options-outlined" id="showlisting" autocomplete="off" checked>
+       <label class="btn btn-outline-info" for="showlisting">Showlisting</label>
+       
+       <input type="radio" class="btn-check " name="options-outlined" id="reviews" autocomplete="off">
+       <label class="btn btn-outline-secondary" for="reviews">Reviews & More</label>
+    </div>
+
+     <div class ="ratingCont d-flex col-6">
          <div class="textCont d-flex">
              <div><i class="bi bi-heart" style="color: red;"></i></div>
              <div class="ps-2">84% 
@@ -112,6 +150,7 @@
      </div>
          
 </div>
+  <div id="content-showlisting" class="content">
  <div class="d-flex">
    <div id="dateContainer">
        @{
@@ -137,6 +176,16 @@
    
          <div class="dropdown ps-4">
            <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             Format
+            </a>
+           <ul class="dropdown-menu">               
+                 <li><a class="dropdown-item" href="#">2D</a></li>
+                 <li><a class="dropdown-item" href="#">4DX-2D</a></li>
+           </ul>
+         </div>
+
+         <div class="dropdown ps-4">
+           <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
              Price
            </a>
            <ul class="dropdown-menu">    
@@ -147,9 +196,11 @@
            </ul>
          </div>
    </div>
+  </div>
  </div>
 
- <div class="movieDetailWrap">
+ <div id="content-reviews" class="content" style="display: none;">
+  <div class="movieDetailWrap">
      <div class="innerMain"> 
          <div class="widgetWrapper">  
              <h3>Synopsis</h3>
@@ -163,21 +214,54 @@
              </div>
              
              <div class="infoItem">
-             <span>LANGUAGE AVAILABLE</span>
-             <p>@Model.Certificate.Name</p>
+                <span>LANGUAGE AVAILABLE</span>
+                <p>@foreach (var language in Model.Languages)
+                      {
+                          <a>@language.Name, </a>
+                      }</p>
              </div>
              <div class="infoItem">
-             <span>GENRE</span>
-             <p>@foreach (var Genre in Model.Genres)
-                    {
-                        <a>@Genre.Name, </a>
-                    }</p>
+               <span>GENRE</span>
+               <p>@foreach (var Genre in Model.Genres)
+                      {
+                          <a>@Genre.Name, </a>
+                      }</p>
+             </div>
+         </div>
+         <div class="widgetWrapper">  
+             <h3 class="pb-2">Cast</h3>
+             <div class="movieCast">
+                    @foreach(var Cast in Model.Casts)
+                        {                                    
+                    <div >
+                        <div class="imgCast">
+                           <img height="64" width="64" style="border-radius:50%;" src="~/@Cast.ImageUrl"/>
+                       </div>
+                       <div>
+                           @Cast.CastName
+                       </div>
+                   </div>
+                        }
              </div>
          </div>
      </div>
  </div>
-
-<div>
+  </div>
+ 
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+        $(document).ready(function(){
+            $('input[name="options-outlined"]').change(function(){
+                if($('#showlisting').is(':checked')) {
+                    $('#content-showlisting').show();
+                    $('#content-reviews').hide();
+                } else if($('#reviews').is(':checked')) {
+                    $('#content-showlisting').hide();
+                    $('#content-reviews').show();
+                }
+            });
+        });
+    </script>

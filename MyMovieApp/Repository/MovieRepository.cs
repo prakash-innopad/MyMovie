@@ -51,7 +51,8 @@ namespace MyMovieApp.Repository
                        .ThenInclude(ml => ml.Language)
                    .Include(m => m.MovieGenres)
                        .ThenInclude(mg => mg.Genre)
-                   .Include(m => m.Certificate)    
+                   .Include(m => m.Certificate)
+                   .Include(m => m.Casts)
                        .FirstOrDefault();
                   
             //var res = _dbContext.Movies.FromSqlRaw("EXEC SP_GetMoviesById @MovieId", new SqlParameter("@MovieId", id)).AsEnumerable();
@@ -80,6 +81,12 @@ namespace MyMovieApp.Repository
                         LanguageId = ml.Language.LanguageId,
                         Name = ml.Language.Name
                     }).ToList(),
+                    Casts = result.Casts.Select(ml => new CastViewModel
+                     { CastId = ml.Id,
+                        CastName = ml.CastName,
+                        ImageUrl = ml.ImageUrl
+                     }).ToList(),
+
                     Certificate = result.Certificate
                 };
             }
