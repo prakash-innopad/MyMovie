@@ -35,6 +35,7 @@ namespace MyMovieApp.Models
 
         public ICollection<MovieGenre> MovieGenres { get; set; }
         public ICollection<Cast> Casts { get; set; }
+        public ICollection<MovieCinema> MovieCinemas { get; set; }
 
         }
 }

@@ -19,7 +19,10 @@ namespace MyMovieApp.Models
         public DbSet<Genre> Genres { get; set; }
         public DbSet<MovieGenre> MovieGenres { get; set; }
         public DbSet<Certificate> Certificate { get; set; }
-
+        public DbSet<Cast> Casts { get; set; }
+        public DbSet<Cinema> Cinemas { get; set; }
+        public DbSet<MovieCinema> MovieCinemas { get; set; }
+        public DbSet<Address> Addresses { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

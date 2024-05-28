@@ -4,7 +4,7 @@ namespace MyMovieApp.Interface
 {
     public interface IMovieRepository
     {
-        MovieViewModel Get(int id);
+        MovieViewModel Get(int id, string city);
         Task<List<MovieViewModel>> GetAll();
         Task<object> AddMovie(MovieViewModel movieViewModel);
 

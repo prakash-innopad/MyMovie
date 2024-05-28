@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyMovieApp.Models;
 
@@ -11,9 +12,10 @@ using MyMovieApp.Models;
 namespace MyMovieApp.Migrations
 {
     [DbContext(typeof(MyMovieContext))]
-    partial class MyMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20240528061751_addCinemaAddressTabless")]
+    partial class addCinemaAddressTabless
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,6 +228,12 @@ namespace MyMovieApp.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ScreenNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ShowTime")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CinemaId");
@@ -263,30 +271,6 @@ namespace MyMovieApp.Migrations
                     b.HasIndex("LanguageId");
 
                     b.ToTable("MovieLanguages");
-                });
-
-            modelBuilder.Entity("MyMovieApp.Models.ShowDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("MovieCinemaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScreenNumber")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ShowTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieCinemaId");
-
-                    b.ToTable("ShowDetail");
                 });
 
             modelBuilder.Entity("CastMovie", b =>
@@ -383,17 +367,6 @@ namespace MyMovieApp.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("MyMovieApp.Models.ShowDetail", b =>
-                {
-                    b.HasOne("MyMovieApp.Models.MovieCinema", "MovieCinema")
-                        .WithMany("ShowDetails")
-                        .HasForeignKey("MovieCinemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MovieCinema");
-                });
-
             modelBuilder.Entity("MyMovieApp.Models.Certificate", b =>
                 {
                     b.Navigation("Movies");
@@ -416,11 +389,6 @@ namespace MyMovieApp.Migrations
                     b.Navigation("MovieGenres");
 
                     b.Navigation("MovieLanguages");
-                });
-
-            modelBuilder.Entity("MyMovieApp.Models.MovieCinema", b =>
-                {
-                    b.Navigation("ShowDetails");
                 });
 #pragma warning restore 612, 618
         }

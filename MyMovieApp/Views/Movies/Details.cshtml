@@ -36,8 +36,16 @@
         padding :10px;
         margin-right :15px;
         width:150px;
-        height:40px;
-        
+        height:40px;        
+    }
+    .pillButton {
+        display:flex;
+        border: 1px solid hsla(0,0%,6%,.23);
+        border-radius : 94px;
+       
+        padding :3px 10px;
+        margin-right :8px;
+           
     }
       #dateContainer {
         display: flex;
@@ -81,6 +89,37 @@
     }
     .movieCast > div{
       margin :0px 12px;
+    }
+    .cinemaListing{
+        display:flex;
+        padding:35px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .time{
+        display:flex;
+        width : 130px;
+        height : 65px;
+         border-radius: 8px;
+        border: 1px solid #eee;
+        justify-content: center;
+        align-items:center;
+        color:mediumseagreen;
+        font-size:20px;
+        font-weight: 600; 
+    }
+    .cinemaList_col1{
+        width:390px;
+    }
+    .cinemaList_col2{
+        display : grid;
+        grid-template-columns : repeat(5,1fr);
+        grid-auto-rows :auto;
+        justify-content: center;
+        grid-row-gap:25px;
+        grid-column-gap:16px;
+        align-items:center;
+
     }
     
     
@@ -144,13 +183,15 @@
              </div>
          </div class="heartCont">
              <div class=" d-flex">
-                 <div class="heartLike"><i class="bi bi-heart"></i>Like</div>
-                 <div class="heartDislike"><i class="bi bi-heartbreak"></i>Dislike</div>
+                 <div class="heartLike"><i class="bi bi-heart"></i>&nbsp;Like</div>
+                 <div class="heartDislike"><i class="bi bi-heartbreak"></i>&nbsp;Dislike</div>
              </div>
      </div>
          
 </div>
   <div id="content-showlisting" class="content">
+
+   <div class="movieDetailWrap">
  <div class="d-flex">
    <div id="dateContainer">
        @{
@@ -197,8 +238,53 @@
          </div>
    </div>
   </div>
- </div>
-
+     <div class="innerMain"> 
+          <div class="widgetWrapper"> 
+              @foreach(var Cinema in Model.Cinamas)
+                    {
+                   <div class="cinemaListing">
+                     <div class="cinemaList_col1">
+                             <h3 class="fs-4">@Cinema.Name, @Cinema.DetaildedAddress</h3>
+                          <div class="d-flex">
+                             <div class="pillButton"><i class="bi bi-sign-turn-right"></i>&nbsp;Get Directions</div>
+                             <div class="pillButton"><i class="bi bi-info-circle"></i>&nbsp;More Info</div>
+                          </div>
+                       </div>                          
+                       <div class="cinemaList_col2">
+                         @if (Cinema.ShowDetails != null && Cinema.ShowDetails.Any())
+{
+                           @foreach(var showDetail in Cinema.ShowDetails)
+                           {
+                           <div class="time">
+                               @showDetail.ShowTime.ToString("hh:mm tt")
+                           </div>
+                           }
+                         }
+                       </div>
+                               
+                   </div>
+                    }
+                    <div class="widgetWrapper">  
+             <h3 class="pb-2 fs-4">@Model.Title Movie Cast</h3>
+             <div class="movieCast">
+                    @foreach(var Cast in Model.Casts)
+                        {                                    
+                    <div >
+                        <div class="imgCast">
+                           <img height="64" width="64" style="border-radius:50%;" src="~/@Cast.ImageUrl"/>
+                       </div>
+                       <div>
+                           @Cast.CastName
+                       </div>
+                   </div>
+                        }
+             </div>
+         </div>
+          </div>
+                   
+     </div>
+   </div>
+</div>
  <div id="content-reviews" class="content" style="display: none;">
   <div class="movieDetailWrap">
      <div class="innerMain"> 

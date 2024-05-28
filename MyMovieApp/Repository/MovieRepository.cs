@@ -44,7 +44,7 @@ namespace MyMovieApp.Repository
         }
 
 
-        public MovieViewModel Get(int id)
+        public MovieViewModel Get(int id, string city)
         {
             var result = _dbContext.Movies.Where(x => x.Id == id)
                   .Include(m => m.MovieLanguages)
@@ -54,12 +54,17 @@ namespace MyMovieApp.Repository
                    .Include(m => m.Certificate)
                    .Include(m => m.Casts)
                        .FirstOrDefault();
+
+            var cinemas = _dbContext.MovieCinemas.Where(mc => mc.MovieId == id && mc.Cinema.Address.City == city)
+                .Include(m => m.Cinema)
+                .ThenInclude(m => m.Address)
+                .ToList();
                   
             //var res = _dbContext.Movies.FromSqlRaw("EXEC SP_GetMoviesById @MovieId", new SqlParameter("@MovieId", id)).AsEnumerable();
             if(result != null)
             {
                 return new MovieViewModel()
-                {
+                    {
                     Id = id,
                     ImageLink = result.ImageLink,
                     Title = result.Title,
@@ -72,22 +77,38 @@ namespace MyMovieApp.Repository
                     Synopsis = result.Synopsis,
                     TrailerLink = result.TrailerLink,
                     Genres = result.MovieGenres.Select(ml => new GenreViewModel
-                    {
+                        {
                         GenreId = ml.Genre.GenreId,
                         Name = ml.Genre.Name
-                    }).ToList(),
+                        }).ToList(),
                     Languages = result.MovieLanguages.Select(ml => new LanguageViewModel
-                    {
+                        {
                         LanguageId = ml.Language.LanguageId,
                         Name = ml.Language.Name
-                    }).ToList(),
+                        }).ToList(),
                     Casts = result.Casts.Select(ml => new CastViewModel
-                     { CastId = ml.Id,
+                        { CastId = ml.Id,
                         CastName = ml.CastName,
                         ImageUrl = ml.ImageUrl
-                     }).ToList(),
+                        }).ToList(),
 
-                    Certificate = result.Certificate
+                    Certificate = result.Certificate,
+                    Cinamas = cinemas.Select(c => new CinemaViewModel
+                        {
+                        CinemaId = c.CinemaId,
+                        Name = c.Cinema.Name,
+                        City = c.Cinema.Address.City,
+                        State = c.Cinema.Address.State,
+                        Country = c.Cinema.Address.Country,
+                        DetaildedAddress = c.Cinema.Address.DetaildedAddress,
+                        AddressId = c.Cinema.Address.AddressId,
+                        PostalCode = c.Cinema.Address?.PostalCode,
+                        ShowDetails = c.ShowDetails?.Select(m => new ShowDetailModel
+                            {
+                               ScreenNumber = m.ScreenNumber,
+                               ShowTime = m.ShowTime
+                            }).ToList()
+                        }).ToList()
                 };
             }
             else

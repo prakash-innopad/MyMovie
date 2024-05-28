@@ -20,7 +20,7 @@ namespace MyMovieApp.Controllers
 
         public ActionResult Details(int id)
         {
-            var movie = _unitOfWork.moviesRepository.Get((int)id);
+            var movie = _unitOfWork.moviesRepository.Get((int)id, "Ahmedabad");
             return View(movie);
         }
 
@@ -55,7 +55,7 @@ namespace MyMovieApp.Controllers
             {
                 return NotFound();
             }
-            var movie = _unitOfWork.moviesRepository.Get((int)id);
+            var movie = _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
             if (movie == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace MyMovieApp.Controllers
         public ActionResult Delete(int? id)
         {
            
-            var movie = _unitOfWork.moviesRepository.Get((int)id);
+            var movie = _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
             if (movie == null)
             {
                 return NotFound();
