@@ -18,6 +18,8 @@ namespace MyMovieApp.Repository
             {
             _dbContext = dbContext;
             }
+
+        #region Add Movie
         public async Task<object> AddMovie(MovieUpsertModel movieViewModel)
             {
             try
@@ -68,7 +70,9 @@ namespace MyMovieApp.Repository
                 }
             return true;
             }
+        #endregion
 
+        #region Delete Movie
         public async Task<bool> DeleteMovie(int id)
             {
             var movie = _dbContext.Movies.Find(id);
@@ -83,8 +87,9 @@ namespace MyMovieApp.Repository
                 return false;
                 }
             }
+        #endregion
 
-
+        #region Get Movie by Id
         public async Task<MovieViewModel> Get(int id, string city)
             {
             var result = await _dbContext.Movies.Where(x => x.Id == id)
@@ -168,7 +173,9 @@ namespace MyMovieApp.Repository
                 }
 
             }
+        #endregion
 
+        #region Get All Movies
         public async Task<List<MovieViewModel>> GetAll()
             {
             /*
@@ -214,7 +221,9 @@ namespace MyMovieApp.Repository
             return movieViewModels;
 
             }
+        #endregion
 
+        #region FetchFilteredMovies
         public async Task<List<MovieViewModel>> FetchFilteredMovies(List<int> genreIds, string format, int pageNumber, int PageSize, int languageId, int sort, bool topSeller)
             {
             try
@@ -281,6 +290,9 @@ namespace MyMovieApp.Repository
                 }
 
             }
+        #endregion
+
+        #region Get Movies for Home page 
         public async Task<HomeMovieViewModel> GetMoviesWithFilterytypes()
             {
             var homeMovieViewModel = new HomeMovieViewModel();
@@ -315,8 +327,10 @@ namespace MyMovieApp.Repository
                 }).ToList();
             return homeMovieViewModel;
             }
+        #endregion
 
-        public async Task<object> UpdateMovie(MovieViewModel movieViewModel)
+        #region Update Movie
+        public async Task<object> UpdateMovie(MovieUpsertModel movieViewModel)
             {
             var movie = _dbContext.Movies.FirstOrDefault(x => x.Id == movieViewModel.Id);
             if (movie != null)
@@ -326,6 +340,21 @@ namespace MyMovieApp.Repository
                 movie.ReleaseDate = movieViewModel.ReleaseDate;
                 movie.Price = movieViewModel.Price;
                 await _dbContext.SaveChangesAsync();
+                if(movieViewModel.PosterImage != null)
+                    {
+                      string fileName = string.Empty;
+                      fileName = Guid.NewGuid().ToString() + Path.GetExtension(movieViewModel.PosterImage.FileName);
+                      movie.ImageLink = fileName;
+                    if(!string.IsNullOrEmpty(movieViewModel.ImageLink))
+                        {
+                        var filePath = Path.Combine("wwwroot", "img", movieViewModel.ImageLink);
+                        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                        if (System.IO.File.Exists(oldFilePath))
+                            {
+                            System.IO.File.Delete(oldFilePath);
+                            }
+                        }                  
+                    }
                 return true;
                 }
             else
@@ -333,38 +362,7 @@ namespace MyMovieApp.Repository
                 return false;
                 }
             }
-
-        public async Task<List<LanguageViewModel>> GetAllLanguages()
-            {
-
-            var languages = _dbContext.Languages.Select(language => new LanguageViewModel
-                {
-                LanguageId = language.LanguageId,
-                Name = language.Name,
-                }).ToList();
-            return languages;
-            /*
-            var Languages = _dbContext.Languages
-                        .Select(language => new SelectListItem
-                            {
-                            Value = language.LanguageId.ToString(),
-                            Text = language.Name,
-                            }).ToList();
-            return Languages;
-            }
-            */
-            }
-
-        public async Task<List<GenreViewModel>> GetAllGenres()
-            {
-
-            var genres = _dbContext.Genres.Select(genre => new GenreViewModel
-                {
-                GenreId = genre.GenreId,
-                Name = genre.Name,
-                }).ToList();
-            return genres;           
-            }   
+        #endregion
 
         public async Task<MovieUpsertModel> GetUpsertModel()
             {

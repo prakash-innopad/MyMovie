@@ -50,13 +50,13 @@ namespace MyMovieApp.Controllers
             }
         }
 
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var movie = _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
+            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
             if (movie == null)
             {
                 return NotFound();
@@ -66,7 +66,7 @@ namespace MyMovieApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(MovieViewModel movieViewModel)
+        public async Task<ActionResult> Edit(MovieUpsertModel movieViewModel)
         {
             try
             {
@@ -86,10 +86,10 @@ namespace MyMovieApp.Controllers
             }
         }
 
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
            
-            var movie = _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
+            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
             if (movie == null)
             {
                 return NotFound();
@@ -99,7 +99,8 @@ namespace MyMovieApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
+        [HttpPost, ActionName("Delete")]
+        public async Task<ActionResult> DeleteMovie(int id)
         {
             try
             {
