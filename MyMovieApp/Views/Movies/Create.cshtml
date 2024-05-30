@@ -1,48 +1,129 @@
-﻿@model MyMovieApp.ViewModel.MovieViewModel
+﻿@model MyMovieApp.ViewModel.MovieUpsertModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1 class="text-center">Add New Movie</h1>
 
-<h4>MovieViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<div class="container">
+    <div class="row">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2">
+                <label asp-for="Title" class="form-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ReleaseDate" class="control-label"></label>
+            <div class="col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="ReleaseDate" class="form-label"></label>
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ImageLink" class="control-label"></label>
-                <input asp-for="ImageLink" class="form-control" />
-                <span asp-validation-for="ImageLink" class="text-danger"></span>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="PosterImage" class="form-label"></label>
+                <input type="file" asp-for="PosterImage" class="form-control" />
+                <span asp-validation-for="PosterImage" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="Price" class="form-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="TrailerLink" class="form-label"></label>
+                <input asp-for="TrailerLink" class="form-control" />
+                <span asp-validation-for="TrailerLink" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="Runtime" class="form-label"></label>
+                <input asp-for="Runtime" placeholder="e.g. 2:30:00" class="form-control" />
+                <span asp-validation-for="Runtime" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="Synopsis" class="form-label"></label>
+                <input asp-for="Synopsis" class="form-control" />
+                <span asp-validation-for="Synopsis" class="text-danger"></span>
+            </div>
+            <div class="accordion mb-2 col-12 col-md-6 offset-md-3 mb-2" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                            Languages
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                        <div class="accordion-body">
+                            <div class="form-group mb-2">
+                                @foreach (var language in Model.Languages)
+                                    {
+                                    <div class="form-check">
+                                        <input class="form-check-input genre-checkbox" type="checkbox" value="@language.LanguageId" name="SelectedLanguageIds" id="SelectedLanguageIds">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            @language.Name
+                                        </label>
+                                    </div>
+                                    }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <span asp-validation-for="SelectedLanguageIds" class="text-danger"></span>
+
+            <div class="accordion mb-2 col-12 col-md-6 offset-md-3 mb-2" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseGenre" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                            Genres
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseGenre" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                        <div class="accordion-body">
+                            <div class="form-group mb-2">
+                                @foreach (var genre in Model.Genres)
+                                    {
+                                    <div class="form-check">
+                                        <input class="form-check-input genre-checkbox" type="checkbox" value="@genre.GenreId" name="SelectedGenreIds" id="SelectedGenreIds">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            @genre.Name
+                                        </label>
+                                    </div>
+                                    }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <span asp-validation-for="SelectedGenreIds" class="text-danger"></span>
+
+
+            <select id="CertificateId" name="CertificateId" class=" form-select-sm col-12 col-md-6 offset-md-3 mb-2" aria-label=".form-select-lg example">
+                <option selected>Open this select menu</option>
+                @foreach (var Certificate in Model?.Certificates)
+                    {
+                    <option value="@Certificate.CertificateId">@Certificate.Name</option>
+                    }
+            </select>
+            <span asp-validation-for="CertificateId" class="text-danger"></span>
+
+            <div class="form-group col-12 col-md-6 offset-md-3 my-2">
+                <input type="submit" value="Create" class="btn btn-primary form-control" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="form-group col-12 col-md-6 offset-md-3 mb-2">
+    <a class="btn btn-outline-secondary form-control" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

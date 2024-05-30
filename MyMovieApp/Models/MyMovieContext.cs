@@ -23,6 +23,8 @@ namespace MyMovieApp.Models
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<MovieCinema> MovieCinemas { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<ShowDetail> ShowDetails { get; set; }
+        public DbSet<SeatAllocation> SeatAllocations { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +63,12 @@ namespace MyMovieApp.Models
            .WithMany(c => c.Movies)
            .HasForeignKey(m => m.CertificateId);
               */
-        }
+
+            modelBuilder.Entity<ShowDetail>()
+            .HasOne(s => s.MovieCinema)
+            .WithMany(mc => mc.ShowDetails)
+            .HasForeignKey(s => s.MovieCinemaId);
+
+            }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyMovieApp.Models;
 
@@ -11,9 +12,10 @@ using MyMovieApp.Models;
 namespace MyMovieApp.Migrations
 {
     [DbContext(typeof(MyMovieContext))]
-    partial class MyMovieContextModelSnapshot : ModelSnapshot
+    [Migration("20240530070055_addTempUpdate")]
+    partial class addTempUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,7 +173,7 @@ namespace MyMovieApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CertificateId")
+                    b.Property<int>("CertificateId")
                         .HasColumnType("int");
 
                     b.Property<int>("DisLikes")
@@ -347,7 +349,9 @@ namespace MyMovieApp.Migrations
                 {
                     b.HasOne("MyMovieApp.Models.Certificate", "Certificate")
                         .WithMany("Movies")
-                        .HasForeignKey("CertificateId");
+                        .HasForeignKey("CertificateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Certificate");
                 });

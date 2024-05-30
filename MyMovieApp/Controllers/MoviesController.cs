@@ -18,28 +18,29 @@ namespace MyMovieApp.Controllers
             return View(result);
         }
 
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            var movie = _unitOfWork.moviesRepository.Get((int)id, "Ahmedabad");
+            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahmedabad");
             return View(movie);
         }
 
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var model = await _unitOfWork.moviesRepository.GetUpsertModel();           
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(MovieViewModel movieViewModel)
+        public async Task<ActionResult> Create(MovieUpsertModel movieViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(movieViewModel);
-            }
+                var model = await _unitOfWork.moviesRepository.GetUpsertModel();
+                return View(model);
+                }
             try
             {
-
                 var result = _unitOfWork.moviesRepository.AddMovie(movieViewModel);               
                 return RedirectToAction(nameof(Index));
             }

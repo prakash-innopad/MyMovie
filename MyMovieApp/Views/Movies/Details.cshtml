@@ -121,27 +121,75 @@
         align-items:center;
 
     }
-    
+
+ .tooltips {
+  position: relative;
+  display: inline-block;
+
+}
+
+.tooltips .tooltiptext {
+    background :white;
+    display : flex;
+  visibility: hidden;
+    border: 2px solid #eee;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltips .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #eee transparent transparent transparent;
+}
+
+.tooltips:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.showSeatInfo{
+padding : 0 12px;
+}
+.showSeatInfo div:first-child{
+   color:#7e7e7e;
+}
+.showSeatInfo div:last-child{
+     color: #21c179
+}
     
 </style>
 
 <div class="row pb-4">
         <div class="col-4 ">
-        <h2>@Model.Title</h2>
+        <h2>@Model?.Title</h2>
             <div class="col-4 movieDetail">
                 <ul class="censorDurationList">
-                    <li>@Model.Certificate.Name</li>
-                    <li class="ps-3">@Model.Runtime</li>
+                    <li>@Model?.Certificate?.Name</li>
+                    <li class="ps-3">@Model?.Runtime</li>
                 </ul>
                 <div>
-                    @foreach (var Genre in Model.Genres)
+                    @foreach (var Genre in Model?.Genres)
                     {
                         <a>@Genre.Name, </a>
                     }
                 </div>
                 <div>
 
-                    @foreach (var Language in Model.Languages)
+                    @foreach (var Language in Model?.Languages)
                     {
                         <a>@Language.Name, </a>
                     }
@@ -255,15 +303,29 @@
 {
                            @foreach(var showDetail in Cinema.ShowDetails)
                            {
-                           <div class="time">
-                               @showDetail.ShowTime.ToString("hh:mm tt")
+                            <div class="timeBlock tooltips"> 
+                               <div class="time ">
+                                   @showDetail.ShowTime.ToString("hh:mm tt")
+                               </div>
+                              <div class="tooltiptext">
+                                                @foreach (var seatInfo in showDetail.SeatAllocations)
+                                                    {
+                                                    <div class="showSeatInfo">
+                                                        <div>@seatInfo.SeatType</div>
+                                                        <div class="fw-bold">&#8377;@seatInfo.Price.ToString("0")</div>
+                                                        <div>Available</div>
+                                                    </div>
+                                                    }
+                                            </div>
+  
+    
                            </div>
                            }
                          }
-                       </div>
-                               
+                       </div>                              
                    </div>
                     }
+                    
                     <div class="widgetWrapper">  
              <h3 class="pb-2 fs-4">@Model.Title Movie Cast</h3>
              <div class="movieCast">
@@ -296,7 +358,7 @@
              <h3>Movie Guide</h3>
              <div class="infoItem">
                  <span>CERTIFICATION</span>
-                 <p>@Model.Certificate.Name</p>
+                 <p>@Model.Certificate?.Name</p>
              </div>
              
              <div class="infoItem">

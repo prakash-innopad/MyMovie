@@ -26,16 +26,14 @@ namespace MyMovieApp.Models
         public string? Format { get; set; }
 
         [ForeignKey(nameof(Certificate))]
-        public int CertificateId { get; set; }
-
-        
-        public Certificate Certificate { get; set; }
+        public int? CertificateId { get; set; }       
+        public Certificate? Certificate { get; set; }
 
         public ICollection<MovieLanguage> MovieLanguages { get; set; }
 
-        public ICollection<MovieGenre> MovieGenres { get; set; }
-        public ICollection<Cast> Casts { get; set; }
-        public ICollection<MovieCinema> MovieCinemas { get; set; }
+        public ICollection<MovieGenre>? MovieGenres { get; set; }
+        public ICollection<Cast>? Casts { get; set; }
+        public ICollection<MovieCinema>? MovieCinemas { get; set; }
 
         }
 }

@@ -9,5 +9,7 @@
 
         public DateTime ShowTime { get; set; }
         public int ScreenNumber { get; set; }
+
+        public ICollection<SeatAllocation> SeatAllocations { get; set; } 
         }
     }
