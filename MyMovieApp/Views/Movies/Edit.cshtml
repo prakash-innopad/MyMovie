@@ -1,4 +1,4 @@
-﻿@model MyMovieApp.ViewModel.MovieViewModel
+﻿@model MyMovieApp.ViewModel.MovieUpsertModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,8 +7,9 @@
 <h1 class="text-center">Edit Movie</h1>
 <div class="row">
 
-        <form asp-action="Edit">
+    <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="ImageLink" hidden />
             <div class="form-group col-12 col-md-6 offset-md-3 mb-2">
                 <label asp-for="Title" class="form-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -19,12 +20,12 @@
                 <input asp-for="ReleaseDate" class="form-control" />
                 <span asp-validation-for="ReleaseDate" class="text-danger"></span>
             </div>
-           
-            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
-                <label asp-for="Price" class="form-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
+        <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+            <label asp-for="PosterImage" class="form-label"></label>
+            <input type="file" asp-for="PosterImage" class="form-control" />
+            <span asp-validation-for="PosterImage" class="text-danger"></span>
+        </div>
+            
             <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
                 <label asp-for="TrailerLink" class="form-label"></label>
                 <input asp-for="TrailerLink" class="form-control" />
@@ -40,6 +41,66 @@
                 <textarea asp-for="Synopsis" class="form-control" ></textarea>
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
+        <div class="accordion mb-2 col-12 col-md-6 offset-md-3 mb-2" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                        Languages
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body">
+                        <div class="form-group mb-2">
+                            @foreach (var language in Model.Languages)
+                                {
+                                <div class="form-check">
+                                    <input class="form-check-input genre-checkbox" type="checkbox" value="@language.LanguageId" name="SelectedLanguageIds" id="SelectedLanguageIds" checked>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        @language.Name
+                                    </label>
+                                </div>
+                                }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <span asp-validation-for="SelectedLanguageIds" class="text-danger"></span>
+
+        <div class="accordion mb-2 col-12 col-md-6 offset-md-3 mb-2" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseGenre" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                        Genres
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseGenre" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body">
+                        <div class="form-group mb-2">
+                            @foreach (var genre in Model.Genres)
+                                {
+                                <div class="form-check">
+                                    <input class="form-check-input genre-checkbox" type="checkbox" value="@genre.GenreId" name="SelectedGenreIds" id="SelectedGenreIds" checked>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        @genre.Name
+                                    </label>
+                                </div>
+                                }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <span asp-validation-for="SelectedGenreIds" class="text-danger"></span>
+
+
+        
+        <span asp-validation-for="CertificateId" class="text-danger"></span>
+
         <div class="form-group col-12 col-md-6 offset-md-3 my-2">
             <input type="submit" value="Save" class="btn btn-primary form-control" />
         </div>

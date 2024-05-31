@@ -28,7 +28,10 @@
                     @Html.DisplayNameFor(model => model.Genres)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Price)
+                    @Html.DisplayNameFor(model => model.Languages)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Runtime)
                 </th>
                 <th></th>
             </tr>
@@ -51,7 +54,13 @@
                         }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Price)
+                        @if (item.Languages != null && item.Languages.Any())
+                            {
+                           <text>@string.Join(", ", item.Languages.Select(l => l.Name))</text>
+                            }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Runtime)
                     </td>
                     <td>
                         <div class="">

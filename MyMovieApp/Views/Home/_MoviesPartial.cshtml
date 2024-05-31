@@ -1,10 +1,11 @@
 ﻿@model MyMovieApp.ViewModel.PaginatedMovieViewModel
 
 <div class="d-flex flex-row" id="moviesContainer">
+    <div class="row">
     @foreach (var movie in Model.Movies)
     {
-        <div class="m-2 ">
-            <div class="card" style="width: 18rem;">
+            <div class="col-sm-6 col-md-4 d-flex align-items-stretch">
+            <div class="card m-2" style="width: 18rem;">
                 <img height="400px" src="~/img/@movie.ImageLink" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title text-start">@movie.Title</h5>
@@ -20,6 +21,7 @@
 
                 </div>
             </div>
+
         </div>
     }
 </div>

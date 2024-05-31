@@ -15,7 +15,6 @@ namespace MyMovieApp.Models
         public string? ImageLink { get; set; }
 
         public string? TrailerLink { get; set; }
-        public decimal Price { get; set;}
 
         public TimeSpan Runtime { get; set; }
         public string Synopsis { get; set; }

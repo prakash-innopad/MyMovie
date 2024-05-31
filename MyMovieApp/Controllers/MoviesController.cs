@@ -41,7 +41,11 @@ namespace MyMovieApp.Controllers
                 }
             try
             {
-                var result = _unitOfWork.moviesRepository.AddMovie(movieViewModel);               
+                var result = _unitOfWork.moviesRepository.AddMovie(movieViewModel);   
+                if (result != null)
+                    TempData["success"] = "Movie Added successfully.";
+                else
+                    TempData["error"] = "Error while updating movie.";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -57,11 +61,12 @@ namespace MyMovieApp.Controllers
                 return NotFound();
             }
             var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
+            MovieUpsertModel movieUpsertModel = new MovieUpsertModel(movie);
             if (movie == null)
             {
                 return NotFound();
             }
-            return View(movie);
+            return View(movieUpsertModel);
         }
 
         [HttpPost]
@@ -80,7 +85,7 @@ namespace MyMovieApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex) 
             {
                 return View();
             }

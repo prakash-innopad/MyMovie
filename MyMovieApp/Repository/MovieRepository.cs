@@ -30,7 +30,6 @@ namespace MyMovieApp.Repository
                     {
                    // ImageLink = movieViewModel.ImageLink,
                     Title = movieViewModel.Title,
-                    Price = movieViewModel.Price,
                     ReleaseDate = movieViewModel.ReleaseDate,
                     Synopsis = movieViewModel.Synopsis,
                     TrailerLink = movieViewModel.TrailerLink,
@@ -116,7 +115,6 @@ namespace MyMovieApp.Repository
                     Id = id,
                     ImageLink = result.ImageLink,
                     Title = result.Title,
-                    Price = result.Price,
                     ReleaseDate = result?.ReleaseDate,
                     Runtime = result.Runtime,
                     Format = result.Format,
@@ -185,7 +183,6 @@ namespace MyMovieApp.Repository
                 Id = movie.Id,
                 ImageLink = movie.ImageLink,
                 ReleaseDate = movie.ReleaseDate,
-                Price = movie.Price,
                 Title = movie.Title,
             }
              ).ToList();
@@ -206,7 +203,8 @@ namespace MyMovieApp.Repository
                 Title = m.Title,
                 ImageLink = m.ImageLink,
                 ReleaseDate = m.ReleaseDate,
-                Price = m.Price,
+                Synopsis = m.Synopsis,
+                Runtime = m.Runtime,
                 Languages = m.MovieLanguages.Select(ml => new LanguageViewModel
                     {
                     LanguageId = ml.Language.LanguageId,
@@ -271,7 +269,6 @@ namespace MyMovieApp.Repository
                     Title = m.Title,
                     ImageLink = m.ImageLink,
                     ReleaseDate = m.ReleaseDate,
-                    Price = m.Price,
                     Languages = m.MovieLanguages.Select(ml => new LanguageViewModel
                         {
                         LanguageId = ml.LanguageId,
@@ -306,7 +303,6 @@ namespace MyMovieApp.Repository
                 Id = movie.Id,
                 ImageLink = movie.ImageLink,
                 ReleaseDate = movie.ReleaseDate,
-                Price = movie.Price,
                 Title = movie.Title,
                 Languages = movie.MovieLanguages.Select(ml => new LanguageViewModel
                     {
@@ -332,29 +328,72 @@ namespace MyMovieApp.Repository
         #region Update Movie
         public async Task<object> UpdateMovie(MovieUpsertModel movieViewModel)
             {
-            var movie = _dbContext.Movies.FirstOrDefault(x => x.Id == movieViewModel.Id);
+            var movie = _dbContext.Movies
+                .Include(m => m.MovieLanguages)
+                .Include(m => m.MovieGenres)
+                 .FirstOrDefault(x => x.Id == movieViewModel.Id);
             if (movie != null)
                 {
                 movie.Title = movieViewModel.Title;
-                movie.ImageLink = movieViewModel.ImageLink;
+                //movie.ImageLink = movieViewModel.ImageLink;
                 movie.ReleaseDate = movieViewModel.ReleaseDate;
-                movie.Price = movieViewModel.Price;
-                await _dbContext.SaveChangesAsync();
-                if(movieViewModel.PosterImage != null)
+                movie.TrailerLink = movieViewModel.TrailerLink;
+                movie.Runtime = movieViewModel.Runtime;
+                movie.Synopsis  = movieViewModel.Synopsis;
+              //  movie.MovieLanguages = movieViewModel.SelectedLanguageIds.Select(id => new MovieLanguage { LanguageId = id }).ToList();
+
+                var existingLanguageIds = movie.MovieLanguages.Select(ml => ml.LanguageId).ToList();
+                var existingGenreIds = movie.MovieGenres.Select(ml => ml.GenreId).ToList();
+
+                 movieViewModel.SelectedLanguageIds.Except(existingLanguageIds).ToList().ForEach(l => movie.MovieLanguages.Add(new MovieLanguage { MovieId = movie.Id, LanguageId = l })); ;
+                var genreIdsToAdd = movieViewModel.SelectedGenreIds.Except(existingGenreIds).ToList();
+                
+                foreach (var genreId in genreIdsToAdd)
+                    {
+                    movie.MovieGenres.Add(new MovieGenre { MovieId = movie.Id, GenreId = genreId });
+                    }
+
+                var languageIdsToRemove = existingLanguageIds.Except(movieViewModel.SelectedLanguageIds).ToList();
+                var genreIdsToRemove = existingGenreIds.Except(movieViewModel.SelectedGenreIds).ToList();
+                foreach (var languageId in languageIdsToRemove)
+                    {
+                    var movieLanguage = movie.MovieLanguages.FirstOrDefault(ml => ml.LanguageId == languageId);
+                    if (movieLanguage != null)
+                        {
+                        _dbContext.MovieLanguages.Remove(movieLanguage);
+                        }
+                    }
+                foreach (var genreId in genreIdsToRemove)
+                    {
+                    var movieGenre = movie.MovieGenres.FirstOrDefault(ml => ml.GenreId == genreId);
+                    if (movieGenre != null)
+                        {
+                        _dbContext.MovieGenres.Remove(movieGenre);
+                        }
+                    }
+
+
+                if (movieViewModel.PosterImage != null)
                     {
                       string fileName = string.Empty;
+                      var filePath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", "img");
                       fileName = Guid.NewGuid().ToString() + Path.GetExtension(movieViewModel.PosterImage.FileName);
-                      movie.ImageLink = fileName;
                     if(!string.IsNullOrEmpty(movieViewModel.ImageLink))
                         {
-                        var filePath = Path.Combine("wwwroot", "img", movieViewModel.ImageLink);
-                        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                        var oldFilePath = Path.Combine(filePath, movieViewModel.ImageLink);
                         if (System.IO.File.Exists(oldFilePath))
                             {
                             System.IO.File.Delete(oldFilePath);
                             }
-                        }                  
+                        }
+
+                    using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
+                        {
+                          movieViewModel.PosterImage.CopyTo(fileStream);
+                        }
+                      movie.ImageLink = fileName;
                     }
+                await _dbContext.SaveChangesAsync();
                 return true;
                 }
             else
