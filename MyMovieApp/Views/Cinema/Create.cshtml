@@ -1,0 +1,60 @@
+﻿@model MyMovieApp.ViewModel.CinemaViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="text-center">Add New Cinema</h1>
+
+<div class="container">
+    <div class="row">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="DetaildedAddress" class="form-label"></label>
+                <input asp-for="DetaildedAddress" placeholder="e.g. building number, street ..." class="form-control" />
+                <span asp-validation-for="DetaildedAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="State" class="form-label"></label>
+                <input asp-for="State" class="form-control" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="Country" class="form-label"></label>
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="form-group col-12 col-md-6 offset-md-3 mb-2 mb-2">
+                <label asp-for="PostalCode" class="form-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-12 col-md-6 offset-md-3 my-2">
+                <input type="submit" value="Create" class="btn btn-primary form-control" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-group col-12 col-md-6 offset-md-3 mb-2">
+    <a class="btn btn-outline-secondary form-control" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

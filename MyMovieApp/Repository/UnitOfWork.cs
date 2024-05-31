@@ -11,5 +11,7 @@ namespace MyMovieApp.Repository
             _dbContext = dbContext;
         }
         public IMovieRepository moviesRepository =>  new MovieRepository(_dbContext);
+
+        public ICinemaRepository cinemaRepository => new CinemaRepository(_dbContext);
     }
 }
