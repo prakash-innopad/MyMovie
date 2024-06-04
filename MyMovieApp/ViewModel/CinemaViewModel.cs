@@ -1,4 +1,5 @@
 ﻿using MyMovieApp.Models;
+using System.ComponentModel;
 
 namespace MyMovieApp.ViewModel
     {
@@ -7,10 +8,12 @@ namespace MyMovieApp.ViewModel
         public int CinemaId { get; set; }
         public string Name { get; set; }
         public int AddressId { get; set; }
+        [DisplayName("Detailed Address")]
         public string DetaildedAddress { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
+        [DisplayName("Postal Code")]
         public string? PostalCode { get; set; }
 
         public ICollection<ShowDetailModel>? ShowDetails { get; set; }

@@ -12,11 +12,16 @@ namespace MyMovieApp.Controllers
         {
             _unitOfWork = unitOfWork;   
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool? forList)
         {
             var result = await _unitOfWork.moviesRepository.GetAll();
+            if(forList == true)
+                return Json(result);
+            else
             return View(result);
+
         }
+
 
         public async Task<ActionResult> Details(int id)
         {

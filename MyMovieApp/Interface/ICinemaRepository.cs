@@ -6,6 +6,9 @@ namespace MyMovieApp.Interface
         {
         Task<CinemaViewModel> Get(int id);
         Task<List<CinemaViewModel>> GetAll();
-         Task<object> AddCinema(CinemaViewModel model);
+         Task<object> AddCinema(CinemaViewModel cinema);
+        Task<bool> UpdateCinema(CinemaViewModel cinema);
+
+        Task<bool> DeleteCinema(int id);
         }
     }

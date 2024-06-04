@@ -10,7 +10,7 @@ namespace MyMovieApp.Controllers
         private readonly IUnitOfWork _unitOfWork;
         public CinemaController(IUnitOfWork unitOfWork)
             {
-              _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
             }
 
         public async Task<ActionResult> Index()
@@ -34,16 +34,16 @@ namespace MyMovieApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CinemaViewModel cinemaViewModel)
+        public async Task<ActionResult> Create(CinemaViewModel cinemaViewModel)
             {
             if (!ModelState.IsValid)
                 {
-               
+
                 return View(cinemaViewModel);
                 }
             try
                 {
-                var result = _unitOfWork.cinemaRepository.AddCinema(cinemaViewModel);
+                var result = await _unitOfWork.cinemaRepository.AddCinema(cinemaViewModel);
                 if (result != null)
                     TempData["success"] = "Cinema Added successfully.";
                 else
@@ -56,44 +56,62 @@ namespace MyMovieApp.Controllers
                 }
             }
 
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
             {
-            return View();
+            if (id == null || id == 0)
+                {
+                return NotFound();
+                }
+            var cinema = await _unitOfWork.cinemaRepository.Get(id);
+
+            if (cinema == null)
+                {
+                return NotFound();
+                }
+            return View(cinema);
             }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(CinemaViewModel cinemaViewModel)
             {
             try
                 {
+                if (ModelState.IsValid)
+                    {
+                    var result = await _unitOfWork.cinemaRepository.UpdateCinema(cinemaViewModel);
+                    if ((bool)result)
+                        TempData["success"] = "Cinema updated successfully.";
+                    else
+                        TempData["error"] = "Error while updating movie.";
+                    }
                 return RedirectToAction(nameof(Index));
                 }
-            catch
+            catch (Exception ex)
                 {
                 return View();
                 }
             }
 
 
-        public ActionResult Delete(int id)
-            {
-            return View();
-            }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete]
+        //  [ValidateAntiForgeryToken]
+        public async Task<bool> Delete(int id)
             {
             try
                 {
-                return RedirectToAction(nameof(Index));
+                var result = await _unitOfWork.cinemaRepository.DeleteCinema(id);
+                if ((bool)result)
+                    TempData["success"] = "Cinema Deleted successfully.";
+                else
+                    TempData["error"] = "Error while deleting Cinema.";
+                 return result;
                 }
+            
             catch
                 {
-                return View();
+                return false;
                 }
             }
-        }
+    }
     }

@@ -1,0 +1,72 @@
+﻿
+
+
+<style>
+    .tooltips {
+        position: relative;
+        display: inline-block;
+    }
+
+         .tooltiptext {
+            background: white;
+            display: flex;
+            visibility: hidden;
+            border: 2px solid #eee;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: -425%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            
+
+        .tooltips:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+</style>
+<div class="timeBlock tooltips">
+
+<a class="nav-link text-dark" id="showMovieList">MovieList</a>
+    <div class="tooltiptext">
+       @*  @foreach (var seatInfo in showDetail.SeatAllocations)
+            {
+            <div class="showSeatInfo">
+                <div>@seatInfo.SeatType</div>
+                <div class="fw-bold">&#8377;@seatInfo.Price.ToString("0")</div>
+                <div>Available</div>
+            </div>
+            } *@sdfd
+        <div id="movieList">
+    </div>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        $('#showMovieList').on('mouseenter',function(){
+            debugger;
+            $.ajax({
+            url : 'Movies/Index?forList=true',
+            type : 'GET',
+                success: function (data) {
+                    console.log(data);
+                    data.forEach(function (movie) {
+                        var listItem = $('<div></div>').text(movie.title);                          
+                            $('#movieList').append(listItem);
+                    })
+                },
+                error: function (error) {
+
+                }
+            })
+        })
+    })
+</script>
+
