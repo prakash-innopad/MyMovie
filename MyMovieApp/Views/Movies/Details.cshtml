@@ -182,17 +182,17 @@ padding : 0 12px;
                     <li class="ps-3">@Model?.Runtime</li>
                 </ul>
                 <div>
-                    @foreach (var Genre in Model?.Genres)
-                    {
-                        <a>@Genre.Name, </a>
-                    }
+
+                    @if (Model?.Genres != null && Model.Genres.Any())
+                     {
+                     <text>@string.Join(", ", Model?.Genres.Select(l => l.Name))</text>
+                     } 
                 </div>
                 <div>
-
-                    @foreach (var Language in Model?.Languages)
-                    {
-                        <a>@Language.Name, </a>
-                    }
+                     @if (Model?.Languages != null && Model.Languages.Any())
+                     {
+                     <text>@string.Join(", ", Model?.Languages.Select(l => l.Name))</text>
+                     } 
                 </div>
         </div>
         

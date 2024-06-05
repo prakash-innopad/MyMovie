@@ -3,6 +3,31 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .movieSearchBox {
+        border-radius : 20px;
+        max-width: 100%;
+        padding :10px 10px;
+        margin: 10px 10px;
+    }
+    .movieSearchBox input{
+        border: 0px;
+        width: 90%;
+    }
+
+    .movieSearchBox input:focus {
+        outline: none;
+        border: none;
+    }
+
+</style>
+<div class="">
+    <div class=" bg-white movieSearchBox">
+        <i class="bi bi-search"></i>
+        <input id="searchBox" type="text" placeholder="Search Movie or a Cinema" />
+    </div>
+</div>
+
 
 @if (Model != null)
     {
@@ -128,9 +153,9 @@
                         <div class="row">
                             @foreach (var movie in Model.Movies)
                                 {
-                                <div class="col-sm-6 col-md-4 d-flex align-items-stretch">
+                                <div class="col-6 col-sm-6 col-md-4 d-flex align-items-stretch">
                                     <div class="card m-2" style="width: 18rem;">
-                                        <img height="320px" src="~/img/@movie.ImageLink" class="card-img-top" alt="...">
+                                        <img height="320px" src="~/img/@(string.IsNullOrEmpty(movie.ImageLink) ? "default-movie.jpg" : movie.ImageLink)" class="card-img-top" alt="...">
                                         <div class="card-body">
                                             <h5 class="card-title text-start">@movie.Title</h5>
                                             <p class="card-text text-start">
@@ -157,17 +182,21 @@
 <script>
     $(document).ready(function () {
         $('input[type=radio][name=language],input[type=radio][name=format],input[type=radio][name=sort]').change(function () {
-            debugger;
+          //  debugger;
             getData();
         });
 
         $('.genre-checkbox').change(function () {
             getData();
         });
+        $('#searchBox').on('keyup', function () {
+            getData();
+        });
     });
 
     function getData() {
-        debugger;
+      //  debugger;
+        var searchText = $('#searchBox').val();
         var selectedLanguage = $('input[name=language]:checked').val();
         var selectedSort = $('input[name=sort]:checked').val();
         var selectedFormat = $('input[name=format]:checked').val();
@@ -175,11 +204,12 @@
             return this.value;
         }).get();
 
-        debugger;
+       // debugger;
         $.ajax({
             url: '@Url.Action("GetFilteredMovies", "Home")',
             type: 'POST',
             data: {
+                searchText: searchText,
                 lang: selectedLanguage,
                 genre: selectedGenres,
                 sort: selectedSort,

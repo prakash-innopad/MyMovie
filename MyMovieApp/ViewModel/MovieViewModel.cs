@@ -22,10 +22,12 @@ namespace MyMovieApp.ViewModel
         public decimal Price { get; set; }
         [RegularExpression(@"^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,7})?$", ErrorMessage = "Runtime must be between 00:00:00.0000000 and 23:59:59.9999999.")]
         public TimeSpan Runtime { get; set; }
+        [Required(ErrorMessage ="Please Enter Synopsis.")]
         public string Synopsis { get; set; }
         public int Likes { get; set; }
         public int DisLikes { get; set; }
         public string? Format { get; set; }
+        [Required(ErrorMessage ="Please Select Certificate Type.")]
         public int CertificateId { get; set; }
         public Certificate? Certificate { get; set; }
         public ICollection<LanguageViewModel>? Languages { get; set; }
@@ -39,12 +41,14 @@ namespace MyMovieApp.ViewModel
     {
         public int LanguageId { get; set; }
         public string Name { get; set; }
-    }
+        public bool IsSelected { get; set; }
+        }
 
     public class GenreViewModel
     {
         public int GenreId { get; set; }
         public string Name { get; set; }
+        public bool IsSelected { get; set; }
     }
 
     public class CastViewModel

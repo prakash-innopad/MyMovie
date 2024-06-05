@@ -1,17 +1,24 @@
 ﻿using MyMovieApp.Models;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyMovieApp.ViewModel
     {
     public class CinemaViewModel
         {
         public int CinemaId { get; set; }
+        [Required(ErrorMessage ="Please Enter Cinema Name.")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "Please Enter Cinema Name.")]
         public int AddressId { get; set; }
+        [Required(ErrorMessage = "Please Enter Detailed Address.")]
         [DisplayName("Detailed Address")]
         public string DetaildedAddress { get; set; }
+        [Required(ErrorMessage = "Please Enter City Name.")]
         public string City { get; set; }
+        [Required(ErrorMessage = "Please Enter State Name.")]
         public string State { get; set; }
+        [Required(ErrorMessage = "Please Enter Country Name.")]
         public string Country { get; set; }
         [DisplayName("Postal Code")]
         public string? PostalCode { get; set; }

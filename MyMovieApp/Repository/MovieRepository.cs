@@ -20,7 +20,7 @@ namespace MyMovieApp.Repository
             }
 
         #region Add Movie
-        public async Task<object> AddMovie(MovieUpsertModel movieViewModel)
+        public async Task<object?> AddMovie(MovieUpsertModel movieViewModel)
             {
             try
                 {
@@ -28,12 +28,13 @@ namespace MyMovieApp.Repository
 
                 var movie = new Movie()
                     {
-                   // ImageLink = movieViewModel.ImageLink,
+                    // ImageLink = movieViewModel.ImageLink,
                     Title = movieViewModel.Title,
                     ReleaseDate = movieViewModel.ReleaseDate,
                     Synopsis = movieViewModel.Synopsis,
                     TrailerLink = movieViewModel.TrailerLink,
                     Runtime = movieViewModel.Runtime,
+                    CertificateId = movieViewModel.CertificateId,
                     MovieLanguages = movieViewModel.SelectedLanguageIds.Select(id => new MovieLanguage { LanguageId = id }).ToList(),
                     MovieGenres = movieViewModel.SelectedGenreIds.Select(id => new MovieGenre { GenreId = id }).ToList()
                     };
@@ -41,10 +42,10 @@ namespace MyMovieApp.Repository
                 string fileName = string.Empty;
                 if (movieViewModel.PosterImage != null)
                     {
-                      fileName = Guid.NewGuid().ToString() + Path.GetExtension(movieViewModel.PosterImage.FileName);
-                      movie.ImageLink = fileName;
+                    fileName = Guid.NewGuid().ToString() + Path.GetExtension(movieViewModel.PosterImage.FileName);
+                    movie.ImageLink = fileName;
                     }
-                await _dbContext.Movies.AddAsync(movie);              
+                await _dbContext.Movies.AddAsync(movie);
                 _dbContext.SaveChanges();
                 if (movieViewModel.PosterImage != null)
                     {
@@ -59,7 +60,7 @@ namespace MyMovieApp.Repository
                 }
             }
 
-       bool HandleImage(MovieUpsertModel movieViewModel, string fileName)
+        bool HandleImage(MovieUpsertModel movieViewModel, string fileName)
             {
             var filePath = Path.Combine("wwwroot", "img", fileName);
             var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
@@ -89,7 +90,7 @@ namespace MyMovieApp.Repository
         #endregion
 
         #region Get Movie by Id
-        public async Task<MovieViewModel> Get(int id, string city)
+        public async Task<MovieViewModel> Get(int id, string city, bool isForEdit = false)
             {
             var result = await _dbContext.Movies.Where(x => x.Id == id)
                   .Include(m => m.MovieLanguages)
@@ -100,17 +101,10 @@ namespace MyMovieApp.Repository
                    .Include(m => m.Casts)
                        .FirstOrDefaultAsync();
 
-            var cinemas = await _dbContext.MovieCinemas.Where(mc => mc.MovieId == id && mc.Cinema.Address.City == city)
-                .Include(m => m.Cinema)
-                  .ThenInclude(m => m.Address)
-                .Include(m => m.ShowDetails)
-                 .ThenInclude(s => s.SeatAllocations)
-                .ToListAsync();
-
             //var res = _dbContext.Movies.FromSqlRaw("EXEC SP_GetMoviesById @MovieId", new SqlParameter("@MovieId", id)).AsEnumerable();
             if (result != null)
                 {
-                return new MovieViewModel()
+                var viewModel = new MovieViewModel()
                     {
                     Id = id,
                     ImageLink = result.ImageLink,
@@ -122,25 +116,58 @@ namespace MyMovieApp.Repository
                     DisLikes = result.DisLikes,
                     Synopsis = result.Synopsis,
                     TrailerLink = result.TrailerLink,
-                    Genres = result.MovieGenres.Select(ml => new GenreViewModel
+                    Certificate = result.Certificate,
+                    
+                    };
+
+                if (isForEdit == true)
+                    {
+                    var allGenres = _dbContext.Genres.ToList();
+                    var selectedGenreIds = result.MovieGenres.Select(g => g.GenreId).ToList();
+                    var allGenreViewModels = allGenres.Select(g => new GenreViewModel
                         {
-                        GenreId = ml.Genre.GenreId,
-                        Name = ml.Genre.Name
-                        }).ToList(),
-                    Languages = result.MovieLanguages.Select(ml => new LanguageViewModel
+                        GenreId = g.GenreId,
+                        Name = g.Name,
+                        IsSelected = selectedGenreIds.Contains(g.GenreId)
+                        }).ToList();
+                    viewModel.Genres = allGenreViewModels;
+
+                    var allLanguages = _dbContext.Languages.ToList();
+                    var selectedLanguagesIds = result.MovieLanguages.Select(g => g.LanguageId).ToList();
+                    var allLanguageViewModels = allLanguages.Select(g => new LanguageViewModel
+                        {
+                        LanguageId = g.LanguageId,
+                        Name = g.Name,
+                        IsSelected = selectedLanguagesIds.Contains(g.LanguageId)
+                        }).ToList();
+                    viewModel.Languages = allLanguageViewModels;
+                    }
+                else
+                    {
+                    var cinemas = await _dbContext.MovieCinemas.Where(mc => mc.MovieId == id && mc.Cinema.Address.City == city)
+                .Include(m => m.Cinema)
+                  .ThenInclude(m => m.Address)
+                .Include(m => m.ShowDetails)
+                 .ThenInclude(s => s.SeatAllocations)
+                .ToListAsync();
+
+                    viewModel.Languages = result.MovieLanguages.Select(ml => new LanguageViewModel
                         {
                         LanguageId = ml.Language.LanguageId,
                         Name = ml.Language.Name
-                        }).ToList(),
-                    Casts = result.Casts.Select(ml => new CastViewModel
+                        }).ToList();
+                    viewModel.Genres = result.MovieGenres?.Select(ml => new GenreViewModel
+                        {
+                        GenreId = ml.Genre.GenreId,
+                        Name = ml.Genre.Name
+                        }).ToList();
+                    viewModel.Casts = result.Casts?.Select(ml => new CastViewModel
                         {
                         CastId = ml.Id,
                         CastName = ml.CastName,
                         ImageUrl = ml.ImageUrl
-                        }).ToList(),
-
-                    Certificate = result.Certificate,
-                    Cinamas = cinemas.Select(c => new CinemaViewModel
+                        }).ToList();
+                    viewModel.Cinamas = cinemas.Select(c => new CinemaViewModel
                         {
                         CinemaId = c.CinemaId,
                         Name = c.Cinema.Name,
@@ -162,8 +189,9 @@ namespace MyMovieApp.Repository
                                 Price = s.Price
                                 }).ToList()
                             }).ToList()
-                        }).ToList()
-                    };
+                        }).ToList();
+                    }
+                return viewModel;
                 }
             else
                 {
@@ -176,19 +204,6 @@ namespace MyMovieApp.Repository
         #region Get All Movies
         public async Task<List<MovieViewModel>> GetAll()
             {
-            /*
-            var movies = await _dbContext.Movies.ToListAsync();
-            return movies.Select(movie => new MovieViewModel
-            {
-                Id = movie.Id,
-                ImageLink = movie.ImageLink,
-                ReleaseDate = movie.ReleaseDate,
-                Title = movie.Title,
-            }
-             ).ToList();
-
-            */
-
             var movies = await _dbContext.Movies
                   .Include(m => m.MovieLanguages)
                       .ThenInclude(ml => ml.Language)
@@ -222,7 +237,7 @@ namespace MyMovieApp.Repository
         #endregion
 
         #region FetchFilteredMovies
-        public async Task<List<MovieViewModel>> FetchFilteredMovies(List<int> genreIds, string format, int pageNumber, int PageSize, int languageId, int sort, bool topSeller)
+        public async Task<List<MovieViewModel>> FetchFilteredMovies(List<int> genreIds, string format, string searchText, int pageNumber, int PageSize, int languageId, int sort, bool topSeller)
             {
             try
                 {
@@ -233,6 +248,10 @@ namespace MyMovieApp.Repository
                           .ThenInclude(mg => mg.Genre)
                       .Include(m => m.Certificate)
                       .AsQueryable();
+                if (!string.IsNullOrEmpty(searchText))
+                    {
+                    query = query.Where(m => m.Title.Contains(searchText));
+                    }
                 if (languageId != 0)
                     {
                     query = query.Where(m => m.MovieLanguages.Any(ml => ml.LanguageId == languageId));
@@ -245,6 +264,7 @@ namespace MyMovieApp.Repository
                     {
                     query = query.Where(m => m.Format == format);
                     }
+               
 
                 switch (sort)
                     {
@@ -339,15 +359,16 @@ namespace MyMovieApp.Repository
                 movie.ReleaseDate = movieViewModel.ReleaseDate;
                 movie.TrailerLink = movieViewModel.TrailerLink;
                 movie.Runtime = movieViewModel.Runtime;
-                movie.Synopsis  = movieViewModel.Synopsis;
-              //  movie.MovieLanguages = movieViewModel.SelectedLanguageIds.Select(id => new MovieLanguage { LanguageId = id }).ToList();
+                movie.Synopsis = movieViewModel.Synopsis;
+                movie.CertificateId = movieViewModel.CertificateId;
+                //  movie.MovieLanguages = movieViewModel.SelectedLanguageIds.Select(id => new MovieLanguage { LanguageId = id }).ToList();
 
                 var existingLanguageIds = movie.MovieLanguages.Select(ml => ml.LanguageId).ToList();
                 var existingGenreIds = movie.MovieGenres.Select(ml => ml.GenreId).ToList();
 
-                 movieViewModel.SelectedLanguageIds.Except(existingLanguageIds).ToList().ForEach(l => movie.MovieLanguages.Add(new MovieLanguage { MovieId = movie.Id, LanguageId = l })); ;
+                movieViewModel.SelectedLanguageIds.Except(existingLanguageIds).ToList().ForEach(l => movie.MovieLanguages.Add(new MovieLanguage { MovieId = movie.Id, LanguageId = l })); ;
                 var genreIdsToAdd = movieViewModel.SelectedGenreIds.Except(existingGenreIds).ToList();
-                
+
                 foreach (var genreId in genreIdsToAdd)
                     {
                     movie.MovieGenres.Add(new MovieGenre { MovieId = movie.Id, GenreId = genreId });
@@ -375,10 +396,10 @@ namespace MyMovieApp.Repository
 
                 if (movieViewModel.PosterImage != null)
                     {
-                      string fileName = string.Empty;
-                      var filePath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", "img");
-                      fileName = Guid.NewGuid().ToString() + Path.GetExtension(movieViewModel.PosterImage.FileName);
-                    if(!string.IsNullOrEmpty(movieViewModel.ImageLink))
+                    string fileName = string.Empty;
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+                    fileName = Guid.NewGuid().ToString() + Path.GetExtension(movieViewModel.PosterImage.FileName);
+                    if (!string.IsNullOrEmpty(movieViewModel.ImageLink))
                         {
                         var oldFilePath = Path.Combine(filePath, movieViewModel.ImageLink);
                         if (System.IO.File.Exists(oldFilePath))
@@ -389,9 +410,9 @@ namespace MyMovieApp.Repository
 
                     using (var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create))
                         {
-                          movieViewModel.PosterImage.CopyTo(fileStream);
+                        movieViewModel.PosterImage.CopyTo(fileStream);
                         }
-                      movie.ImageLink = fileName;
+                    movie.ImageLink = fileName;
                     }
                 await _dbContext.SaveChangesAsync();
                 return true;
@@ -427,11 +448,11 @@ namespace MyMovieApp.Repository
                 }
             catch
                 {
-                  return model;
+                return model;
                 }
             }
         }
     }
 
 
- 
+

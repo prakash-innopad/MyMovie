@@ -23,9 +23,9 @@ namespace MyMovieApp.Controllers
             return View(result);
         }
         [HttpPost]
-        public async Task<IActionResult> GetFilteredMovies(List<int> genre, string format, int page = 1, int size = 5, int lang = 0 ,int sort = 0,  bool top_sell = false)
+        public async Task<IActionResult> GetFilteredMovies(List<int> genre, string format, string searchText, int page = 1, int size = 5, int lang = 0 ,int sort = 0,  bool top_sell = false)
         {
-            var movies = await _unitOfWork.moviesRepository.FetchFilteredMovies(genre, format, page,size, lang, sort, top_sell);
+            var movies = await _unitOfWork.moviesRepository.FetchFilteredMovies(genre, format, searchText, page,size, lang, sort, top_sell);
             var paginatedMovieViewModel = new PaginatedMovieViewModel
             {
                 Movies = movies,

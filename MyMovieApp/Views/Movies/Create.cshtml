@@ -41,6 +41,19 @@
                 <input asp-for="Synopsis" class="form-control" />
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
+
+            <div class="col-12 col-md-6 offset-md-3 mb-2">
+                <label asp-for="Certificate" class="form-label"></label>
+                <select id="CertificateId" name="CertificateId" class="form-select" aria-label=".form-select-lg example">
+                <option selected>Select Certificate</option>
+                @foreach (var Certificate in Model?.Certificates)
+                    {
+                    <option value="@Certificate.CertificateId">@Certificate.Name</option>
+                    }
+            </select>
+            <span asp-validation-for="CertificateId" class="text-danger"></span>
+            </div>
+
             <div class="accordion mb-2 col-12 col-md-6 offset-md-3 mb-2" id="accordionPanelsStayOpenExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -65,9 +78,10 @@
                     </div>
                 </div>
 
+            <span asp-validation-for="SelectedLanguageIds" class="text-danger"></span>
             </div>
 
-            <span asp-validation-for="SelectedLanguageIds" class="text-danger"></span>
+           
 
             <div class="accordion mb-2 col-12 col-md-6 offset-md-3 mb-2" id="accordionPanelsStayOpenExample">
                 <div class="accordion-item">
@@ -97,15 +111,6 @@
 
             <span asp-validation-for="SelectedGenreIds" class="text-danger"></span>
 
-
-            <select id="CertificateId" name="CertificateId" class=" form-select-sm col-12 col-md-6 offset-md-3 mb-2" aria-label=".form-select-lg example">
-                <option selected>Open this select menu</option>
-                @foreach (var Certificate in Model?.Certificates)
-                    {
-                    <option value="@Certificate.CertificateId">@Certificate.Name</option>
-                    }
-            </select>
-            <span asp-validation-for="CertificateId" class="text-danger"></span>
 
             <div class="form-group col-12 col-md-6 offset-md-3 my-2">
                 <input type="submit" value="Create" class="btn btn-primary form-control" />

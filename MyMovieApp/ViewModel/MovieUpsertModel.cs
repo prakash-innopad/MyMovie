@@ -28,8 +28,8 @@ namespace MyMovieApp.ViewModel
         [DisplayName("Poster Image")]
        // [Required(ErrorMessage = "Please upload Movie poster.")]
         public IFormFile? PosterImage { get; set; }
-        //[Required]
-        public List<int>? SelectedLanguageIds { get; set; }
+        [Required(ErrorMessage ="Please select at lease one Language")]
+        public List<int> SelectedLanguageIds { get; set; }
        // [Required]
         public List<int>? SelectedGenreIds { get; set;}
 
