@@ -1,0 +1,101 @@
+﻿@model MyMovieApp.ViewModel.MovieViewModel
+
+<style>
+    .seatLayoutHeader{
+       
+    }
+    .time {
+        display: flex;
+        width: 130px;
+        height: 65px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        justify-content: center;
+        align-items: center;
+        color: mediumseagreen;
+        font-size: 20px;
+        font-weight: 600;
+        margin : 4px 8px;
+    }
+
+    .seatSelect_Available,
+    .seatSelect_Booked,
+    .seatSelect_Selected {
+        display: flex;
+        align-items: center;
+        margin-left: 14px;
+        text-align: center;
+        
+    }
+
+        .seatSelect_Available span,
+        .seatSelect_Booked span,
+        .seatSelect_Selected span,
+        .seatSelect_Available p,
+        .seatSelect_Booked p,
+        .seatSelect_Selected p {
+            margin: 0;
+            padding-left:10px;
+        }
+    .seatSelect_Available span{
+        border: 1px solid #00b8f5;
+        border-radius: 4px;
+        display :block;
+        width : 16px;
+        height : 16px;
+    }
+    .seatSelect_Booked span{
+        border: none;
+        background-color: hsla(0, 0%, 6%, .22);
+        border-radius: 4px;
+        display: block;
+        width: 16px;
+        height: 16px;
+    }
+
+    .seatSelect_Selected span{
+        border: none;
+        background-color: #00b8f5;
+        border-radius: 4px;
+        display: block;
+        width: 16px;
+        height: 16px;
+    }
+</style>
+<div class="seatLayoutHeader">
+    <div class="text-center">
+        <h2>@Model.Title </h2>
+        <h3>@Model.Cinamas.FirstOrDefault().ShowDetails.FirstOrDefault().ShowTime.ToString("d MMM, hh:mm tt") at @Model.Cinamas.FirstOrDefault().DetaildedAddress</h3>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="d-flex">
+            @foreach (var showDetail in @Model.Cinamas.FirstOrDefault().ShowDetails)
+                {
+                <div class="time">
+                    @showDetail.ShowTime.ToString("hh:mm tt")
+                </div>
+                }
+        </div>
+
+        <div class="d-flex align-items-center">
+            <div class="seatSelect_Available">
+                <span ></span>
+                <p>AVAILABLE</p>
+            </div>
+            <div class="seatSelect_Booked">
+                <span ></span>
+                <p>BOOKED</p>
+            </div>
+            <div class="seatSelect_Selected">
+                <span ></span>
+                <p>SELECTED</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+                <div class="seatLayoutSecreen">
+                    <div class="text-center my-4">
+                     <img src="~/img/screen-icon.svg"/>
+                   </div>
+                </div>

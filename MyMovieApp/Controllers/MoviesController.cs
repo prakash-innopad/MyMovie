@@ -21,7 +21,7 @@ namespace MyMovieApp.Controllers
             return View(result);
 
         }
-
+        
 
         public async Task<ActionResult> Details(int id)
         {
@@ -65,7 +65,7 @@ namespace MyMovieApp.Controllers
             {
                 return NotFound();
             }
-            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad", true);
+            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahmedabad", true);
             var upsertModel = await _unitOfWork.moviesRepository.GetUpsertModel();
             MovieUpsertModel movieUpsertModel = new MovieUpsertModel(movie);
             movieUpsertModel.Certificates = upsertModel.Certificates;
@@ -101,7 +101,7 @@ namespace MyMovieApp.Controllers
         public async Task<ActionResult> Delete(int? id)
         {
            
-            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahemedabad");
+            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahmedabad");
             if (movie == null)
             {
                 return NotFound();
@@ -124,5 +124,15 @@ namespace MyMovieApp.Controllers
                 return View();
             }
         }
+
+        public async Task<ActionResult> SeatLayout (int id)
+            {
+            var movie = await _unitOfWork.moviesRepository.Get((int)id, "Ahmedabad");
+            if (movie == null)
+                {
+                return NotFound();
+                }
+            return View(movie);
+            }
     }
 }

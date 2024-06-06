@@ -125,10 +125,12 @@
  .tooltips {
   position: relative;
   display: inline-block;
-
+  text-decoration:none;
 }
-
-.tooltips .tooltiptext {
+.tooltips a {
+        text-decoration: none; 
+    }
+.tooltips .tooltiptext{
     background :white;
     display : flex;
   visibility: hidden;
@@ -136,6 +138,7 @@
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
+  
   position: absolute;
   z-index: 1;
   bottom: 125%;
@@ -304,9 +307,11 @@ padding : 0 12px;
                            @foreach(var showDetail in Cinema.ShowDetails)
                            {
                             <div class="timeBlock tooltips"> 
+                                <a asp-action="SeatLayout" asp-controller="Movies" asp-route-id="@Model.Id">
                                <div class="time ">
                                    @showDetail.ShowTime.ToString("hh:mm tt")
                                </div>
+                               </a>
                               <div class="tooltiptext">
                                                 @foreach (var seatInfo in showDetail.SeatAllocations)
                                                     {
@@ -316,9 +321,7 @@ padding : 0 12px;
                                                         <div>Available</div>
                                                     </div>
                                                     }
-                                            </div>
-  
-    
+                                            </div>   
                            </div>
                            }
                          }

@@ -1,14 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using MyMovieApp.Components;
 using MyMovieApp.Interface;
 using MyMovieApp.Models;
 using MyMovieApp.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+builder.Services.AddServerSideBlazor();
+
 builder.Services.AddDbContext<MyMovieContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,4 +34,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapFallbackToController("Blazor", "Home");
+app.MapBlazorHub();
 app.Run();

@@ -16,7 +16,10 @@ namespace MyMovieApp.Controllers
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
-
+        public IActionResult Blazor()
+            {
+            return View("_Host");
+            }
         public async Task<IActionResult> Index()
         {
             var result = await _unitOfWork.moviesRepository.GetMoviesWithFilterytypes();
