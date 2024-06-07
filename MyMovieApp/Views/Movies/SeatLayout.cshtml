@@ -1,9 +1,9 @@
 ﻿@model MyMovieApp.ViewModel.MovieViewModel
 
 <style>
-    .seatLayoutHeader{
-       
+    .seatLayoutHeader {
     }
+
     .time {
         display: flex;
         width: 130px;
@@ -15,7 +15,7 @@
         color: mediumseagreen;
         font-size: 20px;
         font-weight: 600;
-        margin : 4px 8px;
+        margin: 4px 8px;
     }
 
     .seatSelect_Available,
@@ -25,7 +25,6 @@
         align-items: center;
         margin-left: 14px;
         text-align: center;
-        
     }
 
         .seatSelect_Available span,
@@ -35,31 +34,79 @@
         .seatSelect_Booked p,
         .seatSelect_Selected p {
             margin: 0;
-            padding-left:10px;
+            padding-left: 10px;
         }
-    .seatSelect_Available span{
-        border: 1px solid #00b8f5;
-        border-radius: 4px;
-        display :block;
-        width : 16px;
-        height : 16px;
+
+        .seatSelect_Available span {
+            border: 1px solid #00b8f5;
+            border-radius: 4px;
+            display: block;
+            width: 16px;
+            height: 16px;
+        }
+
+        .seatSelect_Booked span {
+            border: none;
+            background-color: hsla(0, 0%, 6%, .22);
+            border-radius: 4px;
+            display: block;
+            width: 16px;
+            height: 16px;
+        }
+
+        .seatSelect_Selected span {
+            border: none;
+            background-color: #00b8f5;
+            border-radius: 4px;
+            display: block;
+            width: 16px;
+            height: 16px;
+        }
+
+    .seatingRows li {
+        display: flex;
+        margin-bottom: 10px;
     }
-    .seatSelect_Booked span{
-        border: none;
-        background-color: hsla(0, 0%, 6%, .22);
-        border-radius: 4px;
-        display: block;
-        width: 16px;
-        height: 16px;
+    .seatBlank{
+        visibility : hidden;
     }
 
-    .seatSelect_Selected span{
-        border: none;
-        background-color: #00b8f5;
+    .seatDisable{
+        background-color: hsla(0, 0%, 6%, .10) !important;
+        color: hsla(0, 0%, 6%, .22) !important;
+        border: 1px solid transparent !important;
+        cursor:not-allowed !important;
+    }
+
+    .seatingRows ul li span, .seatBlank {
+        border: 1px solid #00b8f5;
         border-radius: 4px;
+        margin-right: 7px;
+        height: 28px;
+        width: 28px;
         display: block;
-        width: 16px;
-        height: 16px;
+        color: #00b8f5;
+        cursor: pointer;
+        text-align: center;
+    }
+
+        .seatingRows ul li span:hover{
+            color:white;
+            background: rgba(0, 184, 245, 0.6);
+        }
+
+    .seatName {
+        width: 45px;
+        text-align: center;
+        font-weight: 600;
+        color: hsla(0, 0%, 6%, .54);
+    }
+
+    .priceData {
+        padding: 20px;
+        font-weight: 500;
+        font-size: 18px;
+        text-align:center;
     }
 </style>
 <div class="seatLayoutHeader">
@@ -79,23 +126,100 @@
 
         <div class="d-flex align-items-center">
             <div class="seatSelect_Available">
-                <span ></span>
+                <span></span>
                 <p>AVAILABLE</p>
             </div>
             <div class="seatSelect_Booked">
-                <span ></span>
+                <span></span>
                 <p>BOOKED</p>
             </div>
             <div class="seatSelect_Selected">
-                <span ></span>
+                <span></span>
                 <p>SELECTED</p>
             </div>
         </div>
     </div>
 </div>
-
-                <div class="seatLayoutSecreen">
-                    <div class="text-center my-4">
-                     <img src="~/img/screen-icon.svg"/>
-                   </div>
+<div>
+<div>
+    <div class="priceData">
+        Recliner :  &#8377;260
+    </div>
+    <div class="seatingRows">
+        <ul>
+            <li>
+                <div class="seatName">
+                    A
                 </div>
+                <div class="d-flex">
+                    <div><span>1</span></div>
+                    <div><span>2</span></div>
+                    <span class="seatBlank"></span>
+                    <span class="seatBlank"></span>
+                    <span class="seatDisable">3</span>
+                    <div><span>4</span></div>
+                    <div><span>5</span></div>
+                </div>
+            </li>
+            <li>
+                <div class="seatName">
+                    B
+                </div>
+                <div class="d-flex">
+                    <div><span>1</span></div>
+                    <div><span>2</span></div>
+                    <div><span>3</span></div>
+                    <div><span>4</span></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<div>
+    <div class="priceData">
+        Prime :  &#8377;240
+    </div>
+    <div class="seatingRows">
+        <ul>
+            <li>
+                <div class="seatName">
+                    A
+                </div>
+                <div class="d-flex">
+                    <div><span>1</span></div>
+                    <div><span>2</span></div>
+                    <span class="seatBlank"></span>
+                    <span class="seatBlank"></span>
+                    <span class="seatDisable">3</span>
+                    <div><span>4</span></div>
+                    <div><span>5</span></div>
+                    <div><span>6</span></div>
+                    <div><span>7</span></div>
+                    <div><span>8</span></div>
+                    <div><span>9</span></div>
+                    <div><span>10</span></div>
+                    <div><span>11</span></div>
+                </div>
+            </li>
+            <li>
+                <div class="seatName">
+                    B
+                </div>
+                <div class="d-flex">
+                    <div><span>1</span></div>
+                    <div><span>2</span></div>
+                    <div><span>3</span></div>
+                    <div><span>4</span></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+</div>
+<div class="seatLayoutSecreen">
+    <div class="text-center my-4">
+        <img src="~/img/screen-icon.svg" />
+    </div>
+</div>
