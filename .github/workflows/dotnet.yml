@@ -26,10 +26,10 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build src\MyMovie\MyMovieApp\MyMovieApp.csproj --no-restore
+      run: dotnet build --no-restore
   test:
     needs: build
     runs-on: [self-hosted]
     steps:
     - name: Test
-      run: dotnet test src\MyMovieTest
+      run: dotnet test --no-build
