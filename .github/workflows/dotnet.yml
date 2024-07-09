@@ -16,6 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set PowerShell Execution Policy
+      run: |
+        Set-ExecutionPolicy RemoteSigned -Scope Process -Force
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
