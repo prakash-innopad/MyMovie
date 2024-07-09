@@ -33,3 +33,35 @@ jobs:
     steps:
     - name: Test
       run: dotnet test --no-build
+  deploy:
+    needs: test
+    runs-on: [self-hosted]
+
+    steps:
+    - name: Project publish
+      run: dotnet publish -c Release src\MyMovieApp\MyMovieApp.csproj -o ${{env.DOTNET_ROOT}}/MyMovie
+
+    - name: Deploy to IIS
+      run: |
+        if ((Get-WebSiteState -Name MyMovie).Value -eq "Started") {
+            Stop-WebSite -Name MyMovie
+            echo "Stopped Website MyMovie"
+        }
+        if ((Get-WebAppPoolState -Name MyMovie).Value -eq "Started") {
+            Stop-WebAppPool -Name MyMovie
+            echo "Stopped Application Pool MyMovie"
+        }
+
+        Start-Sleep -s 15
+        Copy-Item ${{env.DOTNET_ROOT}}/MyMovie/* C:\inetpub\wwwroot\MyMovie -Recurse -Force
+
+        if ((Get-WebSiteState -Name MyMovie).Value -eq "Stopped") {
+            Start-WebSite -Name MyMovie
+            echo "Started Website MyMovie"
+        }
+        if ((Get-WebAppPoolState -Name MyMovie).Value -eq "Stopped") {
+            Start-WebAppPool -Name MyMovie
+            echo "Started Application Pool MyMovie"
+        }
+
+        if ($lastexitcode -lt 8) { $global:lastexitcode = 0 }
