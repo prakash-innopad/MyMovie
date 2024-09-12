@@ -5,22 +5,106 @@
 
 <style>
     .movieSearchBox {
-        border-radius : 20px;
+        border-radius: 20px;
         max-width: 100%;
-        padding :10px 10px;
+        padding: 10px 10px;
         margin: 10px 10px;
     }
-    .movieSearchBox input{
-        border: 0px;
-        width: 90%;
+
+        .movieSearchBox input {
+            border: 0px;
+            width: 90%;
+        }
+
+            .movieSearchBox input:focus {
+                outline: none;
+                border: none;
+            }
+
+    .sticky-sidebar {
+        position: sticky;
+        top: 45px !important;
+        overflow: hidden;
+        z-index: 2;
     }
 
-    .movieSearchBox input:focus {
-        outline: none;
-        border: none;
+    .border-whites {
+        border: none !important;
     }
+
+    .accordion-button {
+        outline: none !important; /* Remove outline when the button is focused */
+    }
+
+        .accordion-button:focus {
+            box-shadow: none !important; /* Remove the default focus box-shadow */
+        }
+
+        .accordion-button:hover {
+            outline: none; /* Ensures no outline on hover */
+            box-shadow: none; /* Removes any box shadow that may appear on hover */
+        }
+
+    .accordion-button {
+        background-color: white !important; /* Default background color */
+        color: black !important; /* Default text color */
+    }
+
+        .accordion-button:not(.collapsed) {
+            background-color: white !important; /* Ensure background stays white when expanded */
+            color: black !important; /* Ensure text stays black when expanded */
+            box-shadow: none; /* Remove any shadow */
+        }
+
+        .accordion-button:focus {
+            box-shadow: none !important; /* Remove focus shadow */
+        }
+
+    .img-wrapper {
+        position: relative;
+    }
+
+    .img-overlay {
+        position: absolute;
+        bottom: .8rem;
+        left: .5rem;
+        text-align: center;
+    }
+
+        .img-overlay:before {
+            content: ' ';
+            display: block;
+            /* adjust 'height' to position overlay content vertically */
+            height: 50%;
+        }
+
+    .rounded-8 {
+        border-radius: 1.2rem !important;
+    }
+
+    #moviesContainer {
+        white-space: nowrap; /* Prevents wrapping of the movie cards */
+    }
+
+    .d-flex.overflow-auto {
+        scrollbar-width: thin; /* For Firefox */
+    }
+
+        .d-flex.overflow-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .d-flex.overflow-auto::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+
+            .d-flex.overflow-auto::-webkit-scrollbar-thumb:hover {
+                background-color: #555;
+            }
 
 </style>
+
 <div class="">
     <div class=" bg-white movieSearchBox">
         <i class="bi bi-search"></i>
@@ -28,17 +112,16 @@
     </div>
 </div>
 
-
 @if (Model != null)
-    {
+{
     <div class="text-center">
-        <div class="row">
-            <div class="col-2 accordion-container">
-                <div class="card">
-                    <div class="accordion" id="accordionPanelsStayOpenExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+        <div class="d-flex flex-md-row flex-column">
+            <div class="col-md-2 col-12 accordion-container sticky-sidebar ">
+                <div class="card border-0">
+                    <div class="accordion rounded-8 flex-md-column overflow-scroll"  id="accordionPanelsStayOpenExample" style="display:flex;flex-direction:row">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header border-0">
+                                <button class="accordion-button border-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                                     Langauges
                                 </button>
                             </h2>
@@ -52,19 +135,19 @@
                                             </label>
                                         </div>
                                         @foreach (var language in Model.Languages)
-                                            {
+                                        {
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" onselect="getData()" name="language" id="language_@language.LanguageId" value="@language.LanguageId">
                                                 <label class="form-check-label" for="flexRadioDefault1">
                                                     @language.Name
                                                 </label>
                                             </div>
-                                            }
+                                        }
                                     </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+                        <div class="accordion-item border-0">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
                                     Format
@@ -89,7 +172,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+                        <div class="accordion-item border-0">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
                                     Sort By
@@ -122,7 +205,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+                        <div class="accordion-item border-0">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
                                     Genres
@@ -132,14 +215,14 @@
                                 <div class="accordion-body">
                                     <form>
                                         @foreach (var genre in Model.Genres)
-                                            {
+                                        {
                                             <div class="form-check">
                                                 <input class="form-check-input genre-checkbox" type="checkbox" value="@genre.GenreId" id="flexCheckDefault">
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     @genre.Name
                                                 </label>
                                             </div>
-                                            }
+                                        }
                                     </form>
                                 </div>
                             </div>
@@ -147,42 +230,121 @@
                     </div>
                 </div>
             </div>
-            <div class="col-10">
-                <div class="card">
+            <div class="col-12 col-md-10">
+                <div class="card border-0 ">
                     <div id="moviesContainer">
                         <div class="row">
                             @foreach (var movie in Model.Movies)
-                                {
-                                <div class="col-6 col-sm-6 col-md-4 d-flex align-items-stretch">
+                            {
+                                <div class="col-6 col-sm-6 col-md-4 d-flex">
                                     <div class="card m-2" style="width: 18rem;">
-                                        <img height="320px" src="~/img/@(string.IsNullOrEmpty(movie.ImageLink) ? "default-movie.jpg" : movie.ImageLink)" class="card-img-top" alt="...">
+                                        <div class="img-wrapper">
+                                            <img class="card-img-top" height="320px" src="~/img/@(string.IsNullOrEmpty(movie.ImageLink) ? "default-movie.jpg" : movie.ImageLink)" alt="...">
+                                            <div class="img-overlay">
+                                                <span class="bg-black bg-opacity-50 py-2 px-3 rounded fw-bold text-white"> <i class="bi bi-heart-fill" style="color: red;"></i> 90%</span>
+                                            </div>
+                                        </div>
                                         <div class="card-body">
                                             <h5 class="card-title text-start">@movie.Title</h5>
-                                            <p class="card-text text-start">
+                                            <p class="card-text text-start text-secondary">
                                                 @if (movie.Languages != null && movie.Languages.Any())
-                                                    {
-                                                    <text>@string.Join(", ", movie.Languages.Select(l => l.Name))</text>
-                                                    }
+                                                {
+                                                    <text >@string.Join(", ", movie.Languages.Select(l => l.Name))</text>
+                                                }
                                             </p>
                                         </div>
-                                        <div class="card-footer">
-                                            <a asp-action="Details" asp-controller="Movies" asp-route-id="@movie.Id" class="card-link">Book Movie</a>
+                                        <div class="card-footer py-3 bg-transparent">
+                                            <a asp-action="Details" asp-controller="Movies" asp-route-id="@movie.Id" class="card-link fw-bold text-info text-decoration-none">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
-                                }
+                            }
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="border rounded-pill p-2 my-4">
+                            View all ... Movies
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+<div class="bg-white rounded-8  container my-4">
+    <div class="p-3">
+        <div class="d-flex justify-content-between mb-2">
+            <h5>
+                Popular Theaters
+            </h5>
+            <a class="fw-normal text-info text-decoration-none">
+                View All
+            </a>
+        </div>
+        <div class="d-flex overflow-hidden">
+            <div class="border rounded-pill p-2 me-2 col-12 col-md-4">
+                Apple Cinema, Bapunagar
+            </div>
+            <div class="border rounded-pill p-2 me-2 col-12 col-md-4">
+                Apple Cinema, Bapunagar
+            </div>
+            <div class="border rounded-pill p-2 me-2 col-12 col-md-4">
+                Apple Cinema, Bapunagar
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-8  container">
+    <div class="p-3">
+        <div class="d-flex justify-content-between mb-2">
+            <h5>
+                Upcoming movies
+            </h5>
+            <a class="fw-normal text-info text-decoration-none">
+                View All
+            </a>
+        </div>
+        <div class="d-flex overflow-auto">
+            <div class="card border-0 w-100">
+                <div id="moviesContainer">
+                    <div class="d-flex flex-row">
+                        @foreach (var movie in Model.Movies)
+                        {
+                            <div class="col-6 col-sm-6 col-md-4 d-flex">
+                                <div class="card m-2" style="width: 18rem;">
+                                         <a asp-action="Details" asp-controller="Movies" asp-route-id="@movie.Id" class="text-decoration-none">
+                                    <div class="img-wrapper">
+                                        <img class="card-img-top" height="320px" src="~/img/@(string.IsNullOrEmpty(movie.ImageLink) ? "default-movie.jpg" : movie.ImageLink)" alt="...">
+                                    </div>
+                                    <div class="card-body">
+                                            <h5 class="card-title text-start text-black text-truncate">@movie.Title</h5>
+                                            <p class="card-text text-start text-secondary text-truncate">
+                                            @if (movie.Languages != null && movie.Languages.Any())
+                                            {
+                                                <text>@string.Join(", ", movie.Languages.Select(l => l.Name))</text>
+                                            }
+                                        </p>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    }
+</div>
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         $('input[type=radio][name=language],input[type=radio][name=format],input[type=radio][name=sort]').change(function () {
-          //  debugger;
+            //  debugger;
             getData();
         });
 
@@ -195,7 +357,7 @@
     });
 
     function getData() {
-      //  debugger;
+        //  debugger;
         var searchText = $('#searchBox').val();
         var selectedLanguage = $('input[name=language]:checked').val();
         var selectedSort = $('input[name=sort]:checked').val();
@@ -204,7 +366,7 @@
             return this.value;
         }).get();
 
-       // debugger;
+   
         $.ajax({
             url: '@Url.Action("GetFilteredMovies", "Home")',
             type: 'POST',

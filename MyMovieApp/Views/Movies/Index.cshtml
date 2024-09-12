@@ -3,18 +3,23 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<style>
+    .text-0 {
+        text
+    }
+    </style>
 <div class="row ">
-<div class="col-md-6">
-<h1>All Movies</h1>
-</div>
-<div class="col-md-6">
-            <a asp-action="Create" class="btn btn-secondary"><i class="bi bi-plus-circle"></i> Create New Movie</a>
-</div>
+    <div class="col-6">
+        <h1>All Movies</h1>
+    </div>
+    <div class="col-6 text-end">
+        <a asp-action="Create" class="btn btn-secondary"><i class="bi bi-plus-circle"></i> <span class="d-none d-xl-inline"> Create New Movie</span></a>
+    </div>
 
 </div>
 @if (Model != null)
 {
+    <div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -33,7 +38,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Runtime)
                 </th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -55,23 +60,23 @@
                     </td>
                     <td>
                         @if (item.Languages != null && item.Languages.Any())
-                            {
-                           <text>@string.Join(", ", item.Languages.Select(l => l.Name))</text>
-                            }
+                        {
+                            <text>@string.Join(", ", item.Languages.Select(l => l.Name))</text>
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Runtime)
                     </td>
                     <td>
-                        <div class="">
-
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
-                            <a asp-action="details" asp-route-id="@item.Id" class="btn btn-info mx-2"><i class="bi bi-info-square"></i>  Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mx-2"><i class="bi bi-trash-fill"></i> Delete</a>
-                        </div>                      
+                            <div class="d-flex ">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary mx-md-2 mx-1 text-0"><i class="bi bi-pencil-square"></i>  <span class="d-none d-xl-inline"> Edit</span></a>
+                                <a asp-action="details" asp-route-id="@item.Id" class="btn btn-info mx-md-2 mx-1"><i class="bi bi-info-square"></i>  <span class="d-none d-xl-inline"> Details</span></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger mx-md-2 mx-1"><i class="bi bi-trash-fill"></i> <span class="d-none d-xl-inline"> Delete</span></a>
+                        </div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    </div>
 }
