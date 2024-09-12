@@ -23,8 +23,9 @@
 
     .sticky-sidebar {
         position: sticky;
-        top: 60px !important;
+        top: 45px !important;
         overflow: hidden;
+        z-index: 2;
     }
 
     .border-whites {
@@ -114,10 +115,10 @@
 @if (Model != null)
 {
     <div class="text-center">
-        <div class="row">
-            <div class="col-2 accordion-container sticky-sidebar ">
+        <div class="d-flex flex-md-row flex-column">
+            <div class="col-md-2 col-12 accordion-container sticky-sidebar ">
                 <div class="card border-0">
-                    <div class="accordion rounded-8" id="accordionPanelsStayOpenExample">
+                    <div class="accordion rounded-8 flex-md-column overflow-scroll"  id="accordionPanelsStayOpenExample" style="display:flex;flex-direction:row">
                         <div class="accordion-item border-0">
                             <h2 class="accordion-header border-0">
                                 <button class="accordion-button border-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
@@ -229,7 +230,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-10 ">
+            <div class="col-12 col-md-10">
                 <div class="card border-0 ">
                     <div id="moviesContainer">
                         <div class="row">
@@ -365,7 +366,7 @@
             return this.value;
         }).get();
 
-        debugger;
+   
         $.ajax({
             url: '@Url.Action("GetFilteredMovies", "Home")',
             type: 'POST',
